@@ -1,0 +1,353 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  CLUB_ADMIN
+  UNIVERSAL_ADMIN
+}
+
+enum AttendanceStatus {
+  PRESENT       // ирсэн
+  LATE          // хоцорсон
+  SICK          // өвчтэй
+  EXCUSED       // чөлөө авсан
+  ABSENT        // тасалсан
+}
+
+enum JoinRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum NotificationType {
+  JOIN_REQUEST
+  JOIN_APPROVED
+  JOIN_REJECTED
+  NEW_POST
+  NEW_COMMENT
+  ATTENDANCE_RECORDED
+  ROLE_CHANGED
+  CLUB_APPROVED
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model User {
+  id              String    @id @default(cuid())
+  name            String?
+  email           String    @unique
+  emailVerified   DateTime?
+  image           String?
+  phone           String?
+  className       String?
+  studentCode     String?
+  role            Role      @default(STUDENT)
+  profileComplete Boolean   @default(false)
+  
+  accounts        Account[]
+  sessions        Session[]
+  clubsCreated    Club[]    @relation("ClubCreator")
+  memberships     ClubMember[]
+  posts           Post[]
+  comments        Comment[]
+  postLikes       PostLike[]
+  joinRequests    JoinRequest[]
+  attendanceRecords ActivityAttendance[]
+  notifications   Notification[]
+  pushSubscriptions PushSubscription[]
+  auditLogs       AuditLog[]
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([role])
+  @@index([studentCode])
+  @@index([className])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Club {
+  id                String   @id @default(cuid())
+  title             String
+  slug              String   @unique
+  description       String   @db.Text
+  profileImage      String?
+  coverImage        String?
+  isPublic          Boolean  @default(true)
+  isActive          Boolean  @default(true)
+  isConfirmed       Boolean  @default(false)
+  allowJoinRequests Boolean  @default(true)
+  
+  creatorId         String
+  creator           User     @relation("ClubCreator", fields: [creatorId], references: [id])
+  
+  members           ClubMember[]
+  posts             Post[]
+  joinForm          JoinForm?
+  joinRequests      JoinRequest[]
+  activitySessions  ActivitySession[]
+  reports           Report[]
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([creatorId])
+  @@index([isActive])
+  @@index([isConfirmed])
+}
+
+model ClubMember {
+  id        String   @id @default(cuid())
+  clubId    String
+  userId    String
+  isAdmin   Boolean  @default(false)
+  
+  club      Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  joinedAt  DateTime @default(now())
+  
+  @@unique([clubId, userId])
+  @@index([userId])
+  @@index([clubId])
+}
+
+model JoinForm {
+  id        String   @id @default(cuid())
+  clubId    String   @unique
+  fields    Json     // Array of field definitions
+
+  club      Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model JoinRequest {
+  id        String   @id @default(cuid())
+  clubId    String
+  userId    String
+  status    JoinRequestStatus @default(PENDING)
+  answers   Json     // Submitted form answers
+  
+  club      Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([status])
+  @@index([clubId])
+  @@index([userId])
+}
+
+model Post {
+  id          String   @id @default(cuid())
+  clubId      String
+  authorId    String
+  content     String   @db.Text
+  attachments Json?    // Array of file paths
+  
+  club        Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  
+  comments    Comment[]
+  likes       PostLike[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([clubId, createdAt])
+  @@index([authorId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  postId    String
+  authorId  String
+  content   String   @db.Text
+  
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([postId])
+  @@index([authorId])
+}
+
+model PostLike {
+  id        String   @id @default(cuid())
+  postId    String
+  userId    String
+  isLike    Boolean  // true = like, false = dislike
+  
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@unique([postId, userId])
+  @@index([userId])
+  @@index([postId])
+}
+
+// === Optimized Attendance/Session tracking ===
+model ActivitySession {
+  id          String              @id @default(cuid())
+  club        Club                @relation(fields: [clubId], references: [id])
+  clubId      String
+  date        DateTime
+  description String?             @db.Text
+  attendances ActivityAttendance[]
+
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  @@index([clubId])
+  @@index([date])
+  @@unique([clubId, date]) // one session per club per date
+}
+
+model ActivityAttendance {
+  id        String           @id @default(cuid())
+  activitySession   ActivitySession  @relation(fields: [sessionId], references: [id])
+  sessionId String
+  user      User             @relation(fields: [userId], references: [id])
+  userId    String
+  status    AttendanceStatus
+  notes     String?
+
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@unique([sessionId, userId]) // prevent duplicate attendance per session
+  @@index([sessionId])
+  @@index([userId])
+  @@index([status])
+}
+
+model Report {
+  id        String   @id @default(cuid())
+  clubId    String
+  title     String
+  semester  String
+  year      Int
+  filePath  String
+  
+  club      Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([clubId, year, semester])
+}
+
+model GlobalEvent {
+  id        String   @id @default(cuid())
+  title     String
+  description String @db.Text
+  image     String?
+  startDate DateTime
+  endDate   DateTime
+  isActive  Boolean  @default(true)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive])
+  @@index([startDate])
+  @@index([endDate])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  data      Json?
+  isRead    Boolean  @default(false)
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([type])
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  keys      Json
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String
+  entity    String
+  entityId  String
+  details   Json?
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([entity])
+  @@index([entityId])
+}
