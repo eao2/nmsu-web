@@ -40,18 +40,18 @@ export default function ProfileSetupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 dark:bg-zinc-900">
+      <div className="max-w-md w-full bg-card border border-border rounded-xl p-8 dark:bg-zinc-900 dark:border-zinc-800">
+        <h1 className="text-2xl font-bold text-foreground dark:text-white mb-2 tracking-tight">
           Профайл бөглөх
         </h1>
-        <p className="text-gray-600 mb-6">
+        <p className="text-muted-foreground dark:text-gray-400 mb-6">
           Дараах мэдээллийг бөглөж дуусгана уу
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-muted-foreground dark:text-gray-400 mb-1">
               Утасны дугаар
             </label>
             <input
@@ -59,13 +59,13 @@ export default function ProfileSetupPage() {
               required
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500"
               placeholder="99001122"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-muted-foreground dark:text-gray-400 mb-1">
               Анги
             </label>
             <input
@@ -73,13 +73,13 @@ export default function ProfileSetupPage() {
               required
               value={formData.className}
               onChange={(e) => setFormData({ ...formData, className: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500"
               placeholder="СЕЗ-21"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-muted-foreground dark:text-gray-400 mb-1">
               Оюутны код
             </label>
             <input
@@ -87,7 +87,7 @@ export default function ProfileSetupPage() {
               required
               value={formData.studentCode}
               onChange={(e) => setFormData({ ...formData, studentCode: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500"
               placeholder="2021001"
             />
           </div>
@@ -95,7 +95,7 @@ export default function ProfileSetupPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-white dark:text-black dark:hover:bg-gray-100"
           >
             {isLoading ? 'Хадгалж байна...' : 'Үргэлжлүүлэх'}
           </button>
