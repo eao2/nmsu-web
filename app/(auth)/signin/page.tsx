@@ -19,10 +19,10 @@ export default function SignInPage() {
       <div className="max-w-md w-full bg-card border border-border rounded-xl p-8 dark:bg-zinc-900 dark:border-zinc-800">
         <div className="text-center mb-8">
           <h1 className="text-xl font-bold text-foreground dark:text-white mb-2 tracking-tight">
-            Оюутны Холбоо
+            New Mongol Student Union
           </h1>
           <p className="text-muted-foreground dark:text-gray-400">
-            Их сургуулийн клубуудын платформ
+            nmsu
           </p>
         </div>
 

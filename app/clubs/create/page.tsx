@@ -91,7 +91,7 @@ export default function CreateClubPage() {
         className="space-y-6 bg-card border border-border rounded-xl p-6 dark:bg-zinc-900 dark:border-zinc-800"
       >
         {/* Club Name */}
-        <div>
+        <div className='my-2'>
           <label className="block text-sm font-medium text-muted-foreground dark:text-gray-400 mb-2">
             Клубын нэр *
           </label>
@@ -108,7 +108,7 @@ export default function CreateClubPage() {
         </div>
 
         {/* Description */}
-        <div>
+        <div className='my-2'>
           <label className="block text-sm font-medium text-muted-foreground dark:text-gray-400 mb-2">
             Тайлбар *
           </label>
@@ -125,7 +125,7 @@ export default function CreateClubPage() {
         </div>
 
         {/* Profile Image */}
-        <div>
+        <div className='my-2'>
           <label className="block text-sm font-medium text-muted-foreground dark:text-gray-400 mb-2">
             Профайл зураг
           </label>
@@ -138,7 +138,7 @@ export default function CreateClubPage() {
         </div>
 
         {/* Cover Image */}
-        <div>
+        <div className='my-2'>
           <label className="block text-sm font-medium text-muted-foreground dark:text-gray-400 mb-2">
             Ковер зураг
           </label>
@@ -151,7 +151,7 @@ export default function CreateClubPage() {
         </div>
 
         {/* Public Checkbox */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 my-2">
           <input
             type="checkbox"
             id="isPublic"
@@ -170,14 +170,14 @@ export default function CreateClubPage() {
         </div>
 
         {/* Admin Notice */}
-        <div className="bg-muted/50 rounded-lg border border-border p-4 dark:bg-zinc-800/50 dark:border-zinc-700">
+        <div className="my-2 bg-muted/50 rounded-lg border border-border p-4 dark:bg-zinc-800/50 dark:border-zinc-700">
           <p className="text-sm text-muted-foreground dark:text-gray-400">
-            Клуб үүсгэсний дараа платформын админ баталгаажуулах шаардлагатай
+            Клуб үүсгэсний дараа Оюутны Холбооноос баталгаажуулах шаардлагатай
           </p>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-4 flex-col sm:flex-row">
+        <div className="my-2 flex gap-4 flex-row">
           <button
             type="button"
             onClick={() => router.back()}
