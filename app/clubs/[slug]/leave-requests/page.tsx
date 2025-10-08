@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 
-export default function JoinRequestsPage() {
+export default function LeaveRequestsPage() {
   const params = useParams();
   const { data: session } = useSession();
   const [club, setClub] = useState<any>(null);
@@ -19,13 +19,13 @@ export default function JoinRequestsPage() {
 
   const fetchClubAndRequests = async () => {
     try {
-      const response = await fetch(`/api/clubs?slug=${params.slug}`);
-      const clubData = await response.json();
+      const clubResponse = await fetch(`/api/clubs?slug=${params.slug}`);
+      const clubData = await clubResponse.json();
 
       if (clubData) {
         setClub(clubData);
 
-        const requestsResponse = await fetch(`/api/clubs/${clubData.id}/join-requests`);
+        const requestsResponse = await fetch(`/api/clubs/${clubData.id}/leave-requests`);
         if (requestsResponse.ok) {
           const data = await requestsResponse.json();
           setRequests(
@@ -42,7 +42,7 @@ export default function JoinRequestsPage() {
 
   const handleAction = async (requestId: string, action: 'approve' | 'reject') => {
     try {
-      const response = await fetch(`/api/join-requests/${requestId}`, {
+      const response = await fetch(`/api/leave-requests/${requestId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action }),
@@ -74,7 +74,7 @@ export default function JoinRequestsPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-white">Элсэлтийн хүсэлтүүд</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground dark:text-white">Гарах хүсэлтүүд</h1>
         <p className="text-muted-foreground dark:text-gray-400 mt-1">{club.title}</p>
       </div>
 
@@ -151,6 +151,12 @@ export default function JoinRequestsPage() {
                 </span>
               </div>
 
+              {request.reason && (
+                <p className="text-sm text-muted-foreground dark:text-gray-400 line-clamp-2 mb-2">
+                  {request.reason}
+                </p>
+              )}
+
               <div className="text-sm text-muted-foreground dark:text-gray-500">
                 {new Date(request.createdAt).toLocaleDateString('mn-MN', {
                   year: 'numeric',
@@ -176,41 +182,56 @@ export default function JoinRequestsPage() {
             <h2 className="text-xl font-bold text-foreground dark:text-white mb-4">Хүсэлтийн дэлгэрэнгүй</h2>
 
             <div className="space-y-4 mb-6">
-              {Object.entries(selectedRequest.answers).map(([key, fieldData]: [string, any]) => {
-                // Handle the new data structure where fieldData contains label and value
-                const label = fieldData.label || key;
-                const value = fieldData.value || fieldData;
-                
-                return (
-                  <div className='my-2' key={key}>
-                    <label className="block text-sm font-medium text-muted-foreground dark:text-gray-400 mb-1">
-                      {label}:
-                    </label>
-                    {typeof value === 'string' && value.startsWith('/uploads/') ? (
-                      <a
-                        href={value}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors duration-200 no-underline dark:text-white dark:hover:text-gray-300"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                          />
-                        </svg>
-                        Файл харах
-                      </a>
-                    ) : Array.isArray(value) ? (
-                      <div className="text-sm text-foreground dark:text-gray-300">{value.join(', ')}</div>
-                    ) : (
-                      <div className="text-sm text-foreground dark:text-gray-300">{value}</div>
-                    )}
+              <div>
+                <label className="block text-sm font-medium text-muted-foreground dark:text-gray-400 mb-1">
+                  Гишүүн
+                </label>
+                <div className="flex items-center gap-3">
+                  {selectedRequest.user.image ? (
+                    <Image
+                      src={selectedRequest.user.image}
+                      alt={selectedRequest.user.name}
+                      width={40}
+                      height={40}
+                      className="w-10 h-10 rounded-full object-cover border border-border dark:border-zinc-700"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center text-foreground font-medium border border-border dark:bg-zinc-800 dark:text-white dark:border-zinc-700">
+                      {selectedRequest.user.name?.charAt(0) || 'U'}
+                    </div>
+                  )}
+                  <div>
+                    <div className="font-medium text-foreground dark:text-white">{selectedRequest.user.name}</div>
+                    <div className="text-sm text-muted-foreground dark:text-gray-400">
+                      {selectedRequest.user.email}
+                    </div>
                   </div>
-                );
-              })}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-muted-foreground dark:text-gray-400 mb-1">
+                  Шалтгаан
+                </label>
+                <div className="text-sm text-foreground dark:text-gray-300 bg-muted/50 rounded-lg p-3 dark:bg-zinc-800/50">
+                  {selectedRequest.reason || 'Шалтгаан заагаагүй'}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-muted-foreground dark:text-gray-400 mb-1">
+                  Огноо
+                </label>
+                <div className="text-sm text-muted-foreground dark:text-gray-400">
+                  {new Date(selectedRequest.createdAt).toLocaleDateString('mn-MN', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </div>
+              </div>
             </div>
 
             {selectedRequest.status === 'PENDING' && (

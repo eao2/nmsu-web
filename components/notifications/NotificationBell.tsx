@@ -3,14 +3,25 @@
 import { useState, useEffect } from "react";
 import { useSocket } from "@/components/SocketProvider";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function NotificationBell() {
   const socket = useSocket();
+  const router = useRouter();
   const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Check if mobile
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
     fetchUnreadCount();
     fetchNotifications();
 
@@ -18,7 +29,7 @@ export default function NotificationBell() {
       socket.on("notification", (notification) => {
         setUnreadCount((prev) => prev + 1);
         setNotifications((prev) => [notification, ...prev]);
-
+        
         // Request permission and show browser notification
         if (Notification.permission === "granted") {
           new Notification(notification.title, {
@@ -30,6 +41,7 @@ export default function NotificationBell() {
     }
 
     return () => {
+      window.removeEventListener("resize", checkMobile);
       if (socket) {
         socket.off("notification");
       }
@@ -69,10 +81,18 @@ export default function NotificationBell() {
     }
   };
 
+  const handleBellClick = () => {
+    if (isMobile) {
+      router.push("/notifications");
+    } else {
+      setIsOpen(!isOpen);
+    }
+  };
+
   return (
     <div className="relative">
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleBellClick}
         className="h-12 w-12 relative p-2 bg-muted/50 hover:bg-muted/50 rounded-xl transition-colors duration-200 dark:bg-zinc-800 dark:hover:bg-zinc-800"
       >
         <svg
@@ -95,13 +115,13 @@ export default function NotificationBell() {
         )}
       </button>
 
-      {isOpen && (
+      {isOpen && !isMobile && (
         <>
           <div
             className="fixed inset-0 z-40"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 mt-2 w-80 bg-card border rounded-xl z-50 dark:bg-zinc-900 dark:border-zinc-800 bg-white border-zinc-300">
+          <div className="absolute right-0 mt-2 w-80 bg-card border rounded-xl z-50 dark:bg-zinc-900 dark:border-zinc-800 bg-white border-zinc-300 shadow-lg">
             <div className="p-4 border-b border-zinc-300 flex items-center justify-between dark:border-zinc-700">
               <h3 className="font-semibold text-foreground text-sm dark:text-white">
                 Мэдэгдлүүд
@@ -120,7 +140,6 @@ export default function NotificationBell() {
                 </button>
               )}
             </div>
-
             <div className="max-h-96 overflow-y-auto">
               {notifications.length === 0 ? (
                 <div className="p-6 text-center text-muted-foreground text-sm dark:text-gray-400">
@@ -156,7 +175,6 @@ export default function NotificationBell() {
                 ))
               )}
             </div>
-
             <Link
               href="/notifications"
               className="block p-3 text-center text-sm text-primary hover:bg-muted/50 border-t border-zinc-300 transition-colors duration-200 no-underline dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-800/50"

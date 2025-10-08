@@ -10,18 +10,19 @@ interface PostFormProps {
 export default function PostForm({ clubId, onPostCreated }: PostFormProps) {
   const [content, setContent] = useState('');
   const [files, setFiles] = useState<File[]>([]);
+  const [uploadedPaths, setUploadedPaths] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!content.trim()) return;
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = Array.from(e.target.files || []);
+    if (selectedFiles.length === 0) return;
 
-    setIsSubmitting(true);
+    setIsUploading(true);
+    const newPaths: string[] = [];
 
     try {
-      const attachments: string[] = [];
-
-      for (const file of files) {
+      for (const file of selectedFiles) {
         const formData = new FormData();
         formData.append('file', file);
 
@@ -32,19 +33,52 @@ export default function PostForm({ clubId, onPostCreated }: PostFormProps) {
 
         if (uploadResponse.ok) {
           const { path } = await uploadResponse.json();
-          attachments.push(path);
+          newPaths.push(path);
         }
       }
 
+      setFiles([...files, ...selectedFiles]);
+      setUploadedPaths([...uploadedPaths, ...newPaths]);
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert('Файл хуулахад алдаа гарлаа');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleRemoveFile = (index: number) => {
+    setFiles(files.filter((_, i) => i !== index));
+    setUploadedPaths(uploadedPaths.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!content.trim()) return;
+
+    setIsSubmitting(true);
+
+    try {
       const response = await fetch(`/api/clubs/${clubId}/posts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content, attachments }),
+        body: JSON.stringify({ 
+          content, 
+          attachments: uploadedPaths 
+        }),
       });
 
       if (response.ok) {
+        // Confirm files are used
+        await fetch('/api/upload/confirm', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filePaths: uploadedPaths }),
+        });
+
         setContent('');
         setFiles([]);
+        setUploadedPaths([]);
         onPostCreated();
       }
     } catch (error) {
@@ -56,10 +90,7 @@ export default function PostForm({ clubId, onPostCreated }: PostFormProps) {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-card border border-border rounded-xl p-6 text-foreground dark:bg-zinc-900 dark:border-zinc-800 dark:text-white"
-    >
+    <form onSubmit={handleSubmit} className="bg-card border border-border rounded-lg p-6 dark:bg-zinc-900 dark:border-zinc-800">
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
@@ -70,16 +101,16 @@ export default function PostForm({ clubId, onPostCreated }: PostFormProps) {
 
       {files.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-2">
-          {Array.from(files).map((file, index) => (
+          {files.map((file, index) => (
             <div
               key={index}
-              className="relative bg-muted/50 rounded-lg px-3 py-2 text-sm text-foreground border border-border dark:bg-zinc-800/50 dark:text-gray-300 dark:border-zinc-700"
+              className="relative bg-muted/50 rounded-lg px-3 py-2 text-sm text-foreground flex items-center gap-2 border border-border dark:bg-zinc-800/50 dark:text-gray-300 dark:border-zinc-700"
             >
-              {file.name}
+              <span className="truncate max-w-xs">{file.name}</span>
               <button
                 type="button"
-                onClick={() => setFiles(files.filter((_, i) => i !== index))}
-                className="ml-2 text-destructive hover:text-destructive/90 transition-colors duration-200"
+                onClick={() => handleRemoveFile(index)}
+                className="text-red-600 hover:text-red-700 transition-colors duration-200"
               >
                 ×
               </button>
@@ -89,7 +120,7 @@ export default function PostForm({ clubId, onPostCreated }: PostFormProps) {
       )}
 
       <div className="mt-4 flex items-center justify-between">
-        <label className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">
+        <label className={`cursor-pointer text-muted-foreground hover:text-foreground transition-colors duration-200 ${isUploading ? 'opacity-50 pointer-events-none' : ''} dark:text-gray-400 dark:hover:text-white`}>
           <svg
             className="w-6 h-6"
             fill="none"
@@ -106,18 +137,22 @@ export default function PostForm({ clubId, onPostCreated }: PostFormProps) {
           <input
             type="file"
             multiple
-            accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx"
-            onChange={(e) => setFiles(Array.from(e.target.files || []))}
+            onChange={handleFileChange}
+            disabled={isUploading}
             className="hidden"
           />
         </label>
 
+        {isUploading && (
+          <span className="text-sm text-muted-foreground dark:text-gray-400">Хуулж байна...</span>
+        )}
+
         <button
           type="submit"
-          disabled={!content.trim() || isSubmitting}
-          className="px-6 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-white dark:text-black dark:hover:bg-gray-100"
+          disabled={!content.trim() || isSubmitting || isUploading}
+          className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-white dark:text-black dark:hover:bg-gray-100"
         >
-          {isSubmitting ? "Нийтэлж байна..." : "Нийтлэх"}
+          {isSubmitting ? 'Нийтэлж байна...' : 'Нийтлэх'}
         </button>
       </div>
     </form>

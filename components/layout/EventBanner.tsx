@@ -1,23 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
 
 export default function EventBanner() {
   const [events, setEvents] = useState<any[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     fetchEvents();
   }, []);
-
-  useEffect(() => {
-    if (events.length > 1) {
-      const timer = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % events.length);
-      }, 5000);
-      return () => clearInterval(timer);
-    }
-  }, [events.length]);
 
   const fetchEvents = async () => {
     try {
@@ -31,47 +26,100 @@ export default function EventBanner() {
 
   if (events.length === 0) return null;
 
-  const currentEvent = events[currentIndex];
-
   return (
-    <div className="mb-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl overflow-hidden border border-blue-500 dark:from-blue-700 dark:to-indigo-700 dark:border-blue-600">
-      <div className="flex flex-col md:flex-row">
-        {currentEvent.image && (
-          <div className="md:w-1/3">
-            <img
-              src={currentEvent.image}
-              alt={currentEvent.title}
-              className="w-full h-48 md:h-full object-cover border-r border-blue-500 dark:border-blue-600"
-            />
-          </div>
-        )}
-        <div className="flex-1 p-6 text-white dark:text-white">
-          <h2 className="text-2xl font-bold mb-2 tracking-tight">{currentEvent.title}</h2>
-          <p className="mb-4 opacity-90">{currentEvent.description}</p>
-          <div className="flex items-center gap-4 text-sm opacity-80">
-            <span>
-              {new Date(currentEvent.startDate).toLocaleDateString("mn-MN")} –{" "}
-              {new Date(currentEvent.endDate).toLocaleDateString("mn-MN")}
-            </span>
-          </div>
-        </div>
-      </div>
+    <div className="mb-8 rounded-xl overflow-hidden border border-border dark:border-zinc-700 h-64 md:h-80">
+      <Swiper
+        modules={[Autoplay, Pagination]}
+        spaceBetween={0}
+        slidesPerView={1}
+        loop={true}
+        autoplay={{
+          delay: 5000,
+          disableOnInteraction: false,
+        }}
+        pagination={{
+          clickable: true,
+          bulletClass: "swiper-pagination-bullet",
+          bulletActiveClass: "swiper-pagination-bullet-active",
+        }}
+        className="h-full"
+      >
+        {events.map((event, index) => (
+          <SwiperSlide key={index} className="relative">
+            {/* Background Image with Overlay */}
+            <div className="absolute inset-0">
+              {event.image ? (
+                <Image
+                  src={event.image}
+                  alt={event.title}
+                  fill
+                  className="object-cover"
+                  priority={index === 0}
+                />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700"></div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/30 to-transparent"></div>
+            </div>
 
-      {events.length > 1 && (
-        <div className="flex justify-center gap-2 pb-4">
-          {events.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentIndex(index)}
-              className={`h-2 rounded-full transition-all duration-200 ${
-                index === currentIndex
-                  ? "bg-white w-4"
-                  : "bg-white/50 hover:bg-white/70"
-              }`}
-            />
-          ))}
-        </div>
-      )}
+            {/* Content */}
+            <div className="relative z-10 h-full flex flex-col justify-end p-6 md:p-8">
+              <div className="max-w-2xl">
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-3 tracking-tight">
+                  {event.title}
+                </h2>
+                <p className="text-white/90 mb-4 text-sm md:text-base line-clamp-2 md:line-clamp-none">
+                  {event.description}
+                </p>
+                <div className="flex items-center text-white/80 text-sm">
+                  <svg
+                    className="w-4 h-4 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <span>
+                    {new Date(event.startDate).toLocaleDateString("mn-MN")} –{" "}
+                    {new Date(event.endDate).toLocaleDateString("mn-MN")}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+
+      {/* Custom styles for pagination bullets */}
+      <style jsx global>{`
+        .swiper-pagination {
+          text-align: left;
+          padding: 4px 8px;
+          top: 0 !important;
+        }
+        .swiper-pagination-bullet {
+          margin-right: 2px !important;
+          width: 8px;
+          height: 8px;
+          background-color: rgba(255, 255, 255, 0.5);
+          opacity: 1;
+          transition: all 0.3s ease;
+        }
+        .swiper-pagination-bullet-active {
+          width: 16px;
+          background-color: white;
+          border-radius: 4px;
+        }
+        .swiper-pagination-bullet:hover {
+          background-color: rgba(255, 255, 255, 0.7);
+        }
+      `}</style>
     </div>
   );
 }

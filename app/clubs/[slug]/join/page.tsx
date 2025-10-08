@@ -20,7 +20,7 @@ export default function JoinClubPage() {
 
   const fetchClubAndForm = async () => {
     try {
-      const response = await fetch(`/api/clubs/${params.slug}`);
+      const response = await fetch(`/api/clubs?slug=${params.slug}`);
       const clubData = await response.json();
 
       if (clubData) {
@@ -111,7 +111,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         </h1>
         <button
           onClick={() => router.back()}
-          className="mt-4 text-primary hover:text-primary/80 transition-colors duration-200 no-underline dark:text-white dark:hover:text-gray-300"
+          className="mt-4 px-4 py-2 rounded-md font-medium transition-colors duration-200 border whitespace-nowrap bg-primary text-primary-foreground border-primary dark:bg-white dark:text-black dark:border-white"
         >
           Буцах
         </button>
@@ -264,21 +264,23 @@ const handleSubmit = async (e: React.FormEvent) => {
 
         {fields.length === 0 && (
           <div className="text-center py-8 text-muted-foreground dark:text-gray-400">
-            Клуб элсэлтийн маягт тохируулаагүй байна
+            Элсэх хүсэлт илгээх.
           </div>
         )}
 
-        <div className="flex gap-4 pt-4 flex-col sm:flex-row">
+        <div className="flex gap-4 pt-4">
           <button
             type="button"
             onClick={() => router.back()}
-            className="flex-1 px-6 py-3 border border-border bg-background text-foreground rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-700"
+            className="flex justify-center items-center border border-border bg-background text-foreground rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-700 w-10 h-10"
           >
-            Буцах
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-left-circle dark:text-white" viewBox="0 0 16 16">
+              <path fillRule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
+            </svg>
           </button>
           <button
             type="submit"
-            disabled={isSubmitting || fields.length === 0}
+            disabled={isSubmitting}
             className="flex-1 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-white dark:text-black dark:hover:bg-gray-100"
           >
             {isSubmitting ? 'Илгээж байна...' : 'Илгээх'}

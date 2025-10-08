@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { handleFileUpload } from '@/lib/upload';
+import { prisma } from '@/lib/prisma';
+
+export const config = {
+  api: {
+    bodyParser: false,
+    sizeLimit: '1024mb',
+  },
+};
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,6 +32,17 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    await prisma.temporaryFile.create({
+      data: {
+        filePath: result.path!,
+        fileName: result.filename!,
+        fileType: result.fileType!,
+        fileSize: result.fileSize!,
+        uploadedBy: session.user.id,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
+      },
+    });
 
     return NextResponse.json(result);
   } catch (error) {

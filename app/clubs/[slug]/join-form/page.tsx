@@ -30,7 +30,7 @@ export default function JoinFormBuilderPage() {
 
   const fetchClubAndForm = async () => {
     try {
-      const response = await fetch(`/api/clubs/${params.slug}`);
+      const response = await fetch(`/api/clubs?slug=${params.slug}`);
       const clubData = await response.json();
 
       if (clubData) {
@@ -123,7 +123,7 @@ export default function JoinFormBuilderPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      <div className="flex flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-white">Элсэлтийн маягт засах</h1>
           <p className="text-muted-foreground dark:text-gray-400 mt-1">{club.title}</p>
@@ -141,22 +141,30 @@ export default function JoinFormBuilderPage() {
           <div key={field.id} className="my-4 bg-card border border-border rounded-xl p-6 dark:bg-zinc-900 dark:border-zinc-800">
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-2">
+                { (index > 0) && (
                 <button
                   type="button"
                   onClick={() => moveField(index, 'up')}
                   disabled={index === 0}
-                  className="px-4 py-2 text-foreground bg-card border border-border rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-900 dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-800"
+                  className="w-8 h-8 text-foreground bg-card border border-border rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-900 dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-800"
                 >
-                  ↑
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-chevron-up" viewBox="0 0 16 16">
+                    <path fillRule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z"/>
+                  </svg>
                 </button>
-                <button
-                  type="button"
-                  onClick={() => moveField(index, 'down')}
-                  disabled={index === fields.length - 1}
-                  className="px-4 py-2 text-foreground bg-card border border-border rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-900 dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-800"
-                >
-                  ↓
-                </button>
+                )}
+                {(index < fields.length - 1) && (
+                  <button
+                    type="button"
+                    onClick={() => moveField(index, 'down')}
+                    disabled={index === fields.length - 1}
+                    className="w-8 h-8 text-foreground bg-card border border-border rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-900 dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-800"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-chevron-down" viewBox="0 0 16 16">
+                      <path fillRule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                    </svg>
+                  </button>
+                )}
                 <span className="text-sm font-medium text-muted-foreground dark:text-gray-500">#{index + 1}</span>
               </div>
               <button

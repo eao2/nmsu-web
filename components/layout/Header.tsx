@@ -34,24 +34,6 @@ export default function Header() {
               />
             </span>
           </Link>
-
-          {/* <nav className="hidden md:flex items-center gap-6">
-            <Link
-              href="/clubs"
-              className="text-foreground hover:text-primary font-medium transition-colors duration-200 no-underline dark:text-white dark:hover:text-gray-300"
-            >
-              Клубууд
-            </Link>
-            {session.user.role === "UNIVERSAL_ADMIN" && (
-              <Link
-                href="/admin"
-                className="text-foreground hover:text-primary font-medium transition-colors duration-200 no-underline dark:text-white dark:hover:text-gray-300"
-              >
-                Админ
-              </Link>
-            )}
-          </nav> */}
-
           <div className="flex items-center gap-4">
             <NotificationBell />
 
@@ -61,9 +43,11 @@ export default function Header() {
                 className="h-12 flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-muted/50 transition-colors duration-200 dark:hover:bg-zinc-800 dark:bg-zinc-800 bg-muted-50"
               >
                 {session.user.image ? (
-                  <img
+                  <Image
                     src={session.user.image}
                     alt={session.user.name || ""}
+                    width={32}
+                    height={32}
                     className="w-8 h-8 rounded-full object-cover border border-zinc-300 dark:border-zinc-700"
                   />
                 ) : (

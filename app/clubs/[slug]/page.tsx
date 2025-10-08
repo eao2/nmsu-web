@@ -27,8 +27,8 @@ export default function ClubDetailPage() {
 
   const fetchClub = async () => {
     try {
-      // const response = await fetch(`/api/clubs?slug=${params.slug}`);
-      const response = await fetch(`/api/clubs/${params.slug}`);
+      const response = await fetch(`/api/clubs?slug=${params.slug}`);
+      // const response = await fetch(`/api/clubs/${params.slug}`);
       const clubData = await response.json();
 
       const userId = session?.user?.id;
@@ -152,17 +152,22 @@ export default function ClubDetailPage() {
                         <>
                           <Link
                             href={`/clubs/${params.slug}/edit`}
-                            className="px-4 py-2 bg-muted text-foreground rounded-md hover:bg-muted/80 transition-colors duration-200 no-underline dark:bg-zinc-800 dark:text-gray-100 dark:hover:bg-zinc-700"
+                            className="px-4 py-2 bg-zinc-200 text-foreground rounded-md hover:bg-muted/80 transition-colors duration-200 no-underline dark:bg-zinc-800 dark:text-gray-100 dark:hover:bg-zinc-700 flex items-center justify-center"
                           >
-                            Засах
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square dark:text-gray-100" viewBox="0 0 16 16">
+                              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                              <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                            </svg>
                           </Link>
-                          <span className="px-4 py-2 bg-green-500/10 text-green-700 dark:text-green-400 dark:bg-green-500/20 rounded-md font-medium border border-green-500/20 dark:border-green-500/30">
+                          {/* <span className="px-3 py-2 bg-green-500/10 text-green-700 dark:text-green-400 dark:bg-green-500/20 rounded-md font-medium border border-green-500/20 dark:border-green-500/30">
                             Админ
-                          </span>
+                          </span> */}
                         </>
                       ) : (
-                        <span className="px-4 py-2 bg-green-500/10 text-green-700 dark:text-green-400 dark:bg-green-500/20 rounded-md font-medium border border-green-500/20 dark:border-green-500/30">
-                          Гишүүн
+                        <span className="felx items-center justify-center px-4 py-2 bg-green-500/10 text-green-700 dark:text-green-400 dark:bg-green-500/20 rounded-md font-medium border border-green-500/20 dark:border-green-500/30">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-people" viewBox="0 0 16 16">
+                            <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                          </svg>
                         </span>
                       )
                     }
@@ -175,7 +180,7 @@ export default function ClubDetailPage() {
 
         {/* Tabs */}
         <div className="border-t border-border dark:border-zinc-800 pt-4">
-          <div className="flex gap-4 overflow-x-auto">
+          <div className="flex gap-4 overflow-x-auto scroll-hidden">
             <button
               onClick={() => setActiveTab("posts")}
               className={`py-2 px-3 font-medium transition-colors duration-200 rounded-md outline-none border-none ${
@@ -207,38 +212,38 @@ export default function ClubDetailPage() {
               Тухай
             </button>
             {isAdmin && (
-              <>
+              <div className="flex text-nowrap gap-4">
                 <Link
                   href={`/clubs/${params.slug}/attendance`}
-                  className="py-1 font-medium transition-colors duration-200 rounded-md outline-none border-none text-muted-foreground hover:text-foreground dark:text-gray-400 dark:hover:text-gray-100"
+                  className="flex items-center justify-center py-1 font-medium transition-colors duration-200 rounded-md outline-none border-none text-muted-foreground hover:text-foreground dark:text-gray-400 dark:hover:text-gray-100"
                 >
                   Ирц
                 </Link>
                 <Link
                   href={`/clubs/${params.slug}/reports`}
-                  className="py-1 font-medium transition-colors duration-200 rounded-md outline-none border-none text-muted-foreground hover:text-foreground dark:text-gray-400 dark:hover:text-gray-100"
+                  className="flex items-center justify-center py-1 font-medium transition-colors duration-200 rounded-md outline-none border-none text-muted-foreground hover:text-foreground dark:text-gray-400 dark:hover:text-gray-100"
                 >
                   Тайлан
                 </Link>
                 <Link
                   href={`/clubs/${params.slug}/join-form`}
-                  className="py-1 font-medium transition-colors duration-200 rounded-md outline-none border-none text-muted-foreground hover:text-foreground dark:text-gray-400 dark:hover:text-gray-100"
+                  className="flex items-center justify-center py-1 font-medium transition-colors duration-200 rounded-md outline-none border-none text-muted-foreground hover:text-foreground dark:text-gray-400 dark:hover:text-gray-100"
                 >
                   Порм Засах
                 </Link>
                 <Link
                   href={`/clubs/${params.slug}/requests`}
-                  className="py-1 font-medium transition-colors duration-200 rounded-md outline-none border-none text-muted-foreground hover:text-foreground dark:text-gray-400 dark:hover:text-gray-100"
+                  className="flex items-center justify-center py-1 font-medium transition-colors duration-200 rounded-md outline-none border-none text-muted-foreground hover:text-foreground dark:text-gray-400 dark:hover:text-gray-100"
                 >
-                  Хүсэлтүүд
+                  Элсэх Хүсэлтүүд
                 </Link>
                 <Link
-                  href={`/clubs/${params.slug}/reports`}
-                  className="py-1 font-medium transition-colors duration-200 rounded-md outline-none border-none text-muted-foreground hover:text-foreground dark:text-gray-400 dark:hover:text-gray-100"
+                  href={`/clubs/${params.slug}/leave-requests`}
+                  className="flex items-center justify-center py-1 font-medium transition-colors duration-200 rounded-md outline-none border-none text-muted-foreground hover:text-foreground dark:text-gray-400 dark:hover:text-gray-100"
                 >
-                  Тайлан
+                  Гарах Хүсэлтүүд
                 </Link>
-              </>
+              </div>
             )}
           </div>
         </div>
@@ -275,11 +280,15 @@ export default function ClubDetailPage() {
                 className="flex items-center gap-3 p-3 hover:bg-muted/50 rounded-md transition-colors duration-200 dark:hover:bg-zinc-800"
               >
                 {member.user.image ? (
-                  <img
-                    src={member.user.image}
-                    alt={member.user.name}
-                    className="w-12 h-12 rounded-full object-cover border border-border dark:border-zinc-800"
-                  />
+                  <div className="relative w-12 h-12 rounded-full object-cover border border-border dark:border-zinc-800">
+                    <Image
+                      src={member.user.image}
+                      alt={member.user.name}
+                      width={48}
+                      height={48}
+                      className="w-12 h-12 rounded-full object-cover border border-border dark:border-zinc-800"
+                    />
+                  </div>
                 ) : (
                   <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center text-muted-foreground font-medium border border-border dark:bg-zinc-800 dark:text-gray-300 dark:border-zinc-700">
                     {member.user.name?.charAt(0) || "U"}
@@ -348,6 +357,13 @@ export default function ClubDetailPage() {
                 </span>
               </div>
             </div>
+            {(isMember && !isAdmin) && (
+            <div>
+              <Link href={`/clubs/${params.slug}/leave`} className="bg-red-100 text-red-900 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-200 px-4 py-2 rounded-md font-medium mt-6 inline-block">
+                Клубээс гарах
+              </Link>
+            </div>
+            )}
           </div>
         </div>
       )}

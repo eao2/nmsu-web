@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import CommentSection from "./CommentSection";
 
 interface PostCardProps {
@@ -37,13 +38,15 @@ export default function PostCard({ post, clubSlug }: PostCardProps) {
   };
 
   return (
-    <div className="my-4 bg-white border border-border rounded-xl overflow-hidden text-foreground dark:bg-zinc-900 dark:border-zinc-800 dark:text-white">
+    <div className="my-4 bg-white border border-border rounded-lg overflow-hidden text-foreground dark:bg-zinc-900 dark:border-zinc-800 dark:text-white">
       <div className="p-6">
         <div className="flex items-center gap-3 mb-4">
           {post.author.image ? (
-            <img
+            <Image
               src={post.author.image}
               alt={post.author.name}
+              width={40}
+              height={40}
               className="w-10 h-10 rounded-full object-cover border border-border dark:border-zinc-700"
             />
           ) : (
@@ -73,10 +76,12 @@ export default function PostCard({ post, clubSlug }: PostCardProps) {
             {post.attachments.map((file: string, index: number) => {
               const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(file);
               return isImage ? (
-                <img
+                <Image
                   key={index}
                   src={file}
                   alt="Attachment"
+                  width={300}
+                  height={192}
                   className="w-full h-48 object-cover rounded-lg border border-border dark:border-zinc-700"
                 />
               ) : (

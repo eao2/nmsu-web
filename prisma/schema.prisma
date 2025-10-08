@@ -27,10 +27,19 @@ enum JoinRequestStatus {
   REJECTED
 }
 
+enum LeaveRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum NotificationType {
   JOIN_REQUEST
   JOIN_APPROVED
   JOIN_REJECTED
+  LEAVE_REQUEST
+  LEAVE_APPROVED
+  LEAVE_REJECTED
   NEW_POST
   NEW_COMMENT
   ATTENDANCE_RECORDED
@@ -88,6 +97,7 @@ model User {
   comments        Comment[]
   postLikes       PostLike[]
   joinRequests    JoinRequest[]
+  leaveRequests   LeaveRequest[]
   attendanceRecords ActivityAttendance[]
   notifications   Notification[]
   pushSubscriptions PushSubscription[]
@@ -128,6 +138,7 @@ model Club {
   posts             Post[]
   joinForm          JoinForm?
   joinRequests      JoinRequest[]
+  leaveRequests     LeaveRequest[]
   activitySessions  ActivitySession[]
   reports           Report[]
   
@@ -184,12 +195,30 @@ model JoinRequest {
   @@index([userId])
 }
 
+model LeaveRequest {
+  id        String   @id @default(cuid())
+  clubId    String
+  userId    String
+  status    LeaveRequestStatus @default(PENDING)
+  reason    String?  @db.Text
+  
+  club      Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([status])
+  @@index([clubId])
+  @@index([userId])
+}
+
 model Post {
   id          String   @id @default(cuid())
   clubId      String
   authorId    String
   content     String   @db.Text
-  attachments Json?    // Array of file paths
+  attachments Json?    // Array of file paths (any file type)
   
   club        Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
   author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
@@ -236,10 +265,9 @@ model PostLike {
   @@index([postId])
 }
 
-// === Optimized Attendance/Session tracking ===
 model ActivitySession {
   id          String              @id @default(cuid())
-  club        Club                @relation(fields: [clubId], references: [id])
+  club        Club                @relation(fields: [clubId], references: [id], onDelete: Cascade)
   clubId      String
   date        DateTime
   description String?             @db.Text
@@ -250,25 +278,40 @@ model ActivitySession {
 
   @@index([clubId])
   @@index([date])
-  @@unique([clubId, date]) // one session per club per date
+  @@unique([clubId, date])
 }
 
 model ActivityAttendance {
-  id        String           @id @default(cuid())
-  activitySession   ActivitySession  @relation(fields: [sessionId], references: [id])
-  sessionId String
-  user      User             @relation(fields: [userId], references: [id])
-  userId    String
-  status    AttendanceStatus
-  notes     String?
+  id              String           @id @default(cuid())
+  activitySession ActivitySession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId       String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String
+  status          AttendanceStatus @default(ABSENT)
+  notes           String?
 
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 
-  @@unique([sessionId, userId]) // prevent duplicate attendance per session
+  @@unique([sessionId, userId])
   @@index([sessionId])
   @@index([userId])
   @@index([status])
+}
+
+model TemporaryFile {
+  id          String   @id @default(cuid())
+  filePath    String
+  fileName    String
+  fileType    String
+  fileSize    Int
+  uploadedBy  String?
+  
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+  
+  @@index([uploadedBy])
+  @@index([expiresAt])
 }
 
 model Report {

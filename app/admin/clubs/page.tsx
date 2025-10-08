@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
+import Image from 'next/image';
 
 export default function AdminClubsPage() {
   const { data: session } = useSession();
@@ -95,9 +96,11 @@ export default function AdminClubsPage() {
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-4">
                 {club.profileImage ? (
-                  <img
+                  <Image
                     src={club.profileImage}
                     alt={club.title}
+                    width={64}
+                    height={64}
                     className="w-16 h-16 rounded-full object-cover"
                   />
                 ) : (

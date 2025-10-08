@@ -3,12 +3,89 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { generateSlug } from '@/lib/utils';
+import { confirmUploadedFiles } from '@/lib/confirmUploadedFiles';
 
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     const { searchParams } = new URL(request.url);
     const filter = searchParams.get('filter') || 'all';
+    const slug = searchParams.get('slug');
+
+    if (slug) {
+      try {
+        const club = await prisma.club.findUnique({
+          where: { slug: slug },
+          include: {
+            creator: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+                email: true,
+              },
+            },
+            members: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    image: true,
+                    email: true,
+                    phone: true,
+                    className: true,
+                    studentCode: true,
+                  },
+                },
+              },
+            },
+            posts: {
+              include: {
+                author: {
+                  select: {
+                    id: true,
+                    name: true,
+                    image: true,
+                  },
+                },
+                _count: {
+                  select: {
+                    comments: true,
+                    likes: true,
+                  },
+                },
+              },
+              orderBy: {
+                createdAt: 'desc',
+              },
+              take: 10,
+            },
+            _count: {
+              select: {
+                members: true,
+                posts: true,
+              },
+            },
+          },
+        });
+
+        if (!club) {
+          return NextResponse.json(
+            { error: 'Клуб олдсонгүй' },
+            { status: 404 }
+          );
+        }
+
+        return NextResponse.json(club);
+      } catch (error) {
+        console.error('Get club error:', error);
+        return NextResponse.json(
+          { error: 'Клубын мэдээлэл татахад алдаа гарлаа' },
+          { status: 500 }
+        );
+      }
+    }
 
     let where: any = {
       isActive: true,
@@ -129,6 +206,8 @@ export async function POST(request: NextRequest) {
         members: true,
       },
     });
+    
+    confirmUploadedFiles([profileImage, coverImage]);
 
     await prisma.user.update({
       where: { id: session.user.id },

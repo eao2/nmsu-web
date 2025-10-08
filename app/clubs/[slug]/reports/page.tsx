@@ -24,7 +24,7 @@ export default function ReportsPage() {
 
   const fetchClubAndReports = async () => {
     try {
-      const response = await fetch(`/api/clubs/${params.slug}`);
+      const response = await fetch(`/api/clubs?slug=${params.slug}`);
       const clubData = await response.json();
 
       if (clubData) {
@@ -95,6 +95,39 @@ export default function ReportsPage() {
     } finally {
       setIsUploading(false);
     }
+  };
+
+  const handleDelete = async (reportId: string) => {
+    if (!confirm('Та энэ тайланг устгахдаа итгэлтэй байна уу?')) {
+      return;
+    }
+    try {
+      const response = await fetch(`/api/clubs/${club.id}/reports`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reportId }),
+      });
+      if (response.ok) {
+        alert('Тайлан амжилттай устгагдлаа!');
+        fetchClubAndReports();
+      }
+      else {
+        alert('Тайлан устгахад алдаа гарлаа');
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert('Тайлан устгахад алдаа гарлаа');
+    }
+  };
+
+  const handleDownload = (filePath: string, fileName: string) => {
+    const link = document.createElement('a');
+    link.href = filePath;
+    link.download = fileName;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   if (!club) {
@@ -215,14 +248,11 @@ export default function ReportsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {reports.map((report) => (
-          <a
+          <div
             key={report.id}
-            href={report.filePath}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-card border border-border rounded-xl p-6 hover:bg-muted/50 transition-colors duration-200 no-underline dark:bg-zinc-900 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
+            className="bg-card border border-border rounded-xl p-6 hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-900 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
           >
-            <div className="flex items-start gap-4">
+            <div className="flex items-start gap-4 mb-4">
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 dark:bg-white/10">
                 <svg
                   className="w-6 h-6 text-primary dark:text-white"
@@ -250,7 +280,26 @@ export default function ReportsPage() {
                 </p>
               </div>
             </div>
-          </a>
+            
+            <div className="flex gap-2 mt-4">
+              <button
+                onClick={() => handleDownload(report.filePath, report.title)}
+                className="flex-1 px-3 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 text-sm dark:bg-white dark:text-black dark:hover:bg-gray-100"
+              >
+                Татах
+              </button>
+              
+              {(session?.user?.role === 'CLUB_ADMIN' ||
+                session?.user?.role === 'UNIVERSAL_ADMIN') && (
+                <button
+                  onClick={() => handleDelete(report.id)}
+                  className="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 text-sm"
+                >
+                  Устгах
+                </button>
+              )}
+            </div>
+          </div>
         ))}
       </div>
 

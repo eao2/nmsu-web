@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 interface CommentSectionProps {
   postId: string;
@@ -56,11 +57,14 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       <form onSubmit={handleSubmit} className="mb-4">
         <div className="flex gap-3">
           {session?.user?.image ? (
-            <img
-              src={session.user.image}
-              alt={session.user.name || ""}
-              className="w-9 h-9 rounded-full object-cover border border-border dark:border-zinc-700"
-            />
+            <div className="relative w-9 h-9 rounded-full">
+              <Image
+                src={session.user.image}
+                alt={session.user.name || ""}
+                fill
+                className="w-9 h-9 rounded-full object-cover border border-border dark:border-zinc-700"
+              />
+            </div>
           ) : (
             <div className="w-9 h-9 bg-muted rounded-full flex items-center justify-center text-foreground text-sm font-semibold border border-border dark:bg-zinc-800 dark:text-white dark:border-zinc-700">
               {session?.user?.name?.charAt(0) || "U"}
@@ -91,9 +95,11 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         {comments.map((comment) => (
           <div key={comment.id} className="flex gap-3">
             {comment.author.image ? (
-              <img
+              <Image
                 src={comment.author.image}
                 alt={comment.author.name}
+                width={36}
+                height={36}
                 className="w-9 h-9 rounded-full object-cover border border-border dark:border-zinc-700"
               />
             ) : (

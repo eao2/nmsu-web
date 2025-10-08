@@ -14,7 +14,7 @@ export default function ClubsPage() {
 
   useEffect(() => {
     fetchClubs();
-  }, [filter]);
+  }, [session, filter]);
 
   const fetchClubs = async () => {
     setIsLoading(true);
@@ -33,37 +33,34 @@ export default function ClubsPage() {
   <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
     <EventBanner />
     <div className="flex flex-col flex-row items-center justify-between gap-4 mb-8">
-      <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-white">
+      <h1 className="text-xl font-medium tracking-tight text-foreground dark:text-white">
         Клубууд
       </h1>
-      {(session?.user?.role === "CLUB_ADMIN" ||
-        session?.user?.role === "UNIVERSAL_ADMIN") && (
         <Link
           href="/clubs/create"
-          className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200 no-underline whitespace-nowrap dark:bg-white dark:text-black dark:hover:bg-gray-100"
+          className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-black text-white hover:bg-primary/90 transition-colors duration-200 no-underline whitespace-nowrap dark:bg-white dark:text-black dark:hover:bg-gray-100"
         >
           + Клуб үүсгэх
         </Link>
-      )}
     </div>
     {/* Filter buttons */}
     <div className="flex flex-wrap gap-2 mb-6">
       <button
         onClick={() => setFilter("all")}
-        className={`px-4 py-2 rounded-md font-medium transition-colors duration-200 border whitespace-nowrap ${
+        className={`px-4 py-2 rounded-md font-medium transition-colors duration-200 whitespace-nowrap ${
           filter === "all"
-            ? "bg-primary text-primary-foreground border-primary dark:bg-white dark:text-black dark:border-white"
-            : "bg-card text-foreground border-border hover:bg-muted/50 dark:bg-zinc-900 dark:text-gray-100 dark:border-zinc-800 dark:hover:bg-zinc-800"
+            ? "bg-primary text-primary-foreground dark:bg-white dark:text-black bg-black text-white"
+            : "bg-card text-foreground hover:bg-muted/50 dark:bg-zinc-900 dark:text-gray-100 dark:hover:bg-zinc-800"
         }`}
       >
         Бүх клубууд
       </button>
       <button
         onClick={() => setFilter("my")}
-        className={`px-4 py-2 rounded-md font-medium transition-colors duration-200 border whitespace-nowrap ${
+        className={`px-4 py-2 rounded-md font-medium transition-colors duration-200 whitespace-nowrap ${
           filter === "my"
-            ? "bg-primary text-primary-foreground border-primary dark:bg-white dark:text-black dark:border-white"
-            : "bg-card text-foreground border-border hover:bg-muted/50 dark:bg-zinc-900 dark:text-gray-100 dark:border-zinc-800 dark:hover:bg-zinc-800"
+            ? "bg-primary text-primary-foreground dark:bg-white dark:text-black bg-black text-white"
+            : "bg-card text-foreground hover:bg-muted/50 dark:bg-zinc-900 dark:text-gray-100 dark:hover:bg-zinc-800"
         }`}
       >
         Миний клубууд

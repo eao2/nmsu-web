@@ -2,17 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { confirmUploadedFiles } from '@/lib/confirmUploadedFiles';
+import { deleteFiles } from '@/lib/deleteFiles';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-
-    const { id: clubSlug } = await params;
+    const { id } = await params;
 
     const club = await prisma.club.findUnique({
-      where: { slug: clubSlug },
+      where: { id },
       include: {
         creator: {
           select: {
@@ -117,6 +118,24 @@ export async function PATCH(
     }
 
     const body = await request.json();
+
+    const profileImage = body.profileImage || null;
+    const coverImage = body.coverImage || null;
+
+    confirmUploadedFiles([profileImage ,coverImage]);
+
+    const prevClub = await prisma.club.findUnique({
+      where: { id: clubId },
+    });
+
+    prevClub?.profileImage &&
+      prevClub.profileImage !== profileImage &&
+      (await deleteFiles([prevClub.profileImage]));
+
+    prevClub?.coverImage &&
+      prevClub.coverImage !== coverImage &&
+      (await deleteFiles([prevClub.coverImage]));
+
     const club = await prisma.club.update({
       where: { id: clubId },
       data: body,

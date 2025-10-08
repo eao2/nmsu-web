@@ -1,3 +1,4 @@
+// src/app/api/clubs/[id]/leave-requests/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -5,18 +6,14 @@ import { prisma } from '@/lib/prisma';
 import { createNotification } from '@/lib/socket';
 import { sendEmail } from '@/lib/email';
 import { sendPushNotification } from '@/lib/push';
-import { JoinRequestEmail } from '@/emails/JoinRequestEmail';
-import { JoinApprovedEmail } from '@/emails/JoinApprovedEmail';
-import { confirmUploadedFiles } from '@/lib/confirmUploadedFiles';
+import { LeaveRequestEmail } from '@/emails/LeaveRequestEmail';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-
     const { id: clubId } = await params;
-
     const session = await getServerSession(authOptions);
     if (!session?.user) {
       return NextResponse.json(
@@ -28,7 +25,7 @@ export async function GET(
     const member = await prisma.clubMember.findUnique({
       where: {
         clubId_userId: {
-          clubId: clubId,
+          clubId,
           userId: session.user.id,
         },
       },
@@ -41,8 +38,8 @@ export async function GET(
       );
     }
 
-    const requests = await prisma.joinRequest.findMany({
-      where: { clubId: clubId },
+    const requests = await prisma.leaveRequest.findMany({
+      where: { clubId },
       include: {
         user: {
           select: {
@@ -63,7 +60,7 @@ export async function GET(
 
     return NextResponse.json(requests);
   } catch (error) {
-    console.error('Get join requests error:', error);
+    console.error('Get leave requests error:', error);
     return NextResponse.json(
       { error: 'Хүсэлтүүд татахад алдаа гарлаа' },
       { status: 500 }
@@ -76,9 +73,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-
     const { id: clubId } = await params;
-
     const session = await getServerSession(authOptions);
     if (!session?.user) {
       return NextResponse.json(
@@ -104,80 +99,72 @@ export async function POST(
       );
     }
 
-    if (!club.allowJoinRequests) {
+    // Check if user is a member
+    const isMember = await prisma.clubMember.findUnique({
+      where: {
+        clubId_userId: {
+          clubId,
+          userId: session.user.id,
+        },
+      },
+    });
+
+    if (!isMember) {
       return NextResponse.json(
-        { error: 'Клуб одоогоор элсэлт хүлээн авахгүй байна' },
+        { error: 'Та энэ клубын гишүүн биш байна' },
         { status: 400 }
       );
     }
 
-    const existingRequest = await prisma.joinRequest.findFirst({
-      where: {
-        clubId: clubId,
-        userId: session.user.id,
-        status: "PENDING"
-      },
-    });
-
-    if (existingRequest) {
+    if (isMember.isAdmin) {
       return NextResponse.json(
-        { error: 'Та аль хэдийн хүсэлт илгээсэн байна' },
+        { error: 'Та энэ клубын админ гарах боломжгүй' },
         { status: 400 }
       );
     }
 
     const body = await request.json();
-    const { answers } = body;
+    const { reason } = body;
 
-    const joinRequest = await prisma.joinRequest.create({
+    const leaveRequest = await prisma.leaveRequest.create({
       data: {
-        clubId: clubId,
+        clubId,
         userId: session.user.id,
-        answers,
+        reason,
       },
     });
-
-    const filePathsToConfirm = Object.values(answers).reduce((acc: string[], answer: any) => {
-      if (typeof answer.value === 'string' && answer.value.startsWith('/uploads/')) {
-        acc.push(answer.value);
-      }
-      return acc;
-    }, []);
-
-    if (filePathsToConfirm.length > 0) {
-      await confirmUploadedFiles(filePathsToConfirm);
-    }
 
     // Notify all admins
     for (const admin of club.members) {
       await createNotification({
         userId: admin.userId,
-        type: 'JOIN_REQUEST',
-        title: 'Шинэ элсэлтийн хүсэлт',
-        message: `${session.user.name} таны клубт элсэх хүсэлт илгээлээ`,
-        data: { joinRequestId: joinRequest.id, clubId: clubId },
+        type: 'LEAVE_REQUEST',
+        title: 'Гарах хүсэлт',
+        message: `${session.user.name} клубээс гарах хүсэлт илгээлээ`,
+        data: { leaveRequestId: leaveRequest.id, clubId },
       });
 
       await sendEmail({
         to: admin.user.email,
-        subject: 'Шинэ элсэлтийн хүсэлт',
-        react: JoinRequestEmail({
+        subject: 'Гарах хүсэлт',
+        react: LeaveRequestEmail({
           clubTitle: club.title,
           userName: session.user.name || 'Хэрэглэгч',
+          reason: reason || 'Шалтгаан заагаагүй',
         }),
       });
 
       await sendPushNotification({
         userId: admin.userId,
-        title: 'Шинэ элсэлтийн хүсэлт',
-        body: `${session.user.name} таны клубт элсэх хүсэлт илгээлээ`,
-        url: `/clubs/${club.slug}`,
+        title: 'Гарах хүсэлт',
+        body: `${session.user.name} клубээс гарах хүсэлт илгээлээ`,
+        url: `/clubs/${club.slug}/leave-requests`,
       });
     }
 
-    return NextResponse.json(joinRequest, { status: 201 });
+    return NextResponse.json(leaveRequest, { status: 201 });
   } catch (error) {
-    console.error('Create join request error:', error);
+    console.error('Create leave request error:', error);
     return NextResponse.json(
       { error: 'Хүсэлт илгээхэд алдаа гарлаа' },
       { status: 500 }

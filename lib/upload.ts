@@ -1,3 +1,4 @@
+// lib/upload.ts
 import { NextRequest } from 'next/server';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
@@ -32,6 +33,8 @@ export async function handleFileUpload(
       success: true,
       path: `/uploads/${folder}/${filename}`,
       filename,
+      fileType: file.type,
+      fileSize: file.size,
     };
   } catch (error) {
     console.error('File upload error:', error);

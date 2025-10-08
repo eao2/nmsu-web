@@ -6,6 +6,7 @@ import { createNotification } from '@/lib/socket';
 import { sendEmail } from '@/lib/email';
 import { sendPushNotification } from '@/lib/push';
 import { NewPostEmail } from '@/emails/NewPostEmail';
+import { confirmUploadedFiles } from '@/lib/confirmUploadedFiles';
 
 export async function GET(
   request: NextRequest,
@@ -133,6 +134,8 @@ export async function POST(
         },
       },
     });
+
+    confirmUploadedFiles(attachments || []);
 
     // Notify all club members
     for (const member of post.club.members) {
