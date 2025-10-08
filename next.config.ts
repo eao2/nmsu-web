@@ -4,7 +4,18 @@ const nextConfig = {
     serverActions: true,
   },
   images: {
-    domains: ['lh3.googleusercontent.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**', 
+        pathname: '/**',
+      },
+      {
+        protocol: 'http',
+        hostname: '**', 
+        pathname: '/**',
+      },
+    ],
   },
   async headers() {
     return [
