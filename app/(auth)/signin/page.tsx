@@ -2,10 +2,10 @@
 
 import { signIn } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import Image from 'next/image';
 
-export default function SignInPage() {
+function SignInInner() {
   const searchParams = useSearchParams();
   const error = searchParams.get('error');
   const [isLoading, setIsLoading] = useState(false);
@@ -20,11 +20,7 @@ export default function SignInPage() {
       <div className="max-w-md w-full bg-card border border-border rounded-xl p-8 dark:bg-zinc-900 dark:border-zinc-800">
         <div className="text-center mb-8">
           <div className="relative w-16 h-16 mx-auto mb-4">
-          <Image
-            src="/nmsu-logo-sm.svg"
-            alt="NMSU Logo"
-            fill
-          />
+            <Image src="/nmsu-logo-sm.svg" alt="NMSU Logo" fill />
           </div>
           <h1 className="text-xl font-bold text-foreground dark:text-white mb-2 tracking-tight">
             New Mongol Student Union
@@ -57,5 +53,13 @@ export default function SignInPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <SignInInner />
+    </Suspense>
   );
 }
