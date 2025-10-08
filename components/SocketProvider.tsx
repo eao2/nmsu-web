@@ -14,23 +14,23 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
   const [socket, setSocket] = useState<Socket | null>(null);
 
-  // useEffect(() => {
-  //   if (session?.user?.id) {
-  //     const newSocket = io({
-  //       path: '/api/socket',
-  //     });
+  useEffect(() => {
+    if (session?.user?.id) {
+      const newSocket = io({
+        path: '/api/socket',
+      });
 
-  //     newSocket.on('connect', () => {
-  //       newSocket.emit('authenticate', session.user.id);
-  //     });
+      newSocket.on('connect', () => {
+        newSocket.emit('authenticate', session.user.id);
+      });
 
-  //     setSocket(newSocket);
+      setSocket(newSocket);
 
-  //     return () => {
-  //       newSocket.close();
-  //     };
-  //   }
-  // }, [session?.user?.id]);
+      return () => {
+        newSocket.close();
+      };
+    }
+  }, [session?.user?.id]);
 
   return (
     <SocketContext.Provider value={socket}>
