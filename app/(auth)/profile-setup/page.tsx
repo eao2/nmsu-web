@@ -59,16 +59,16 @@ export default function ProfileSetupPage() {
     if (!formData.className.trim()) {
       newErrors.className = 'Ангийн нэрийг бөглөнө үү.';
       isValid = false;
-    } else if (formData.className.length > 10) {
-      newErrors.className = 'Ангийн нэр 10 тэмдэгтээс хэтрэхгүй байна.';
+    } else if (formData.className.length > 16) {
+      newErrors.className = 'Ангийн нэр 16 тэмдэгтээс хэтрэхгүй байна.';
       isValid = false;
     }
 
     if (!formData.studentCode.trim()) {
       newErrors.studentCode = 'Оюутны кодыг бөглөнө үү.';
       isValid = false;
-    } else if (formData.studentCode.length < 5 || formData.studentCode.length > 10) {
-      newErrors.studentCode = 'Оюутны код 5-10 тэмдэгтийн хооронд байна.';
+    } else if (formData.studentCode.length <= 5 || formData.studentCode.length >= 16) {
+      newErrors.studentCode = 'Оюутны код 5-16 тэмдэгтийн хооронд байна.';
       isValid = false;
     }
 
