@@ -1,4 +1,4 @@
-// next-auth.d.ts
+// types/next-auth.d.ts
 
 import 'next-auth';
 import { Role } from '@prisma/client';

@@ -1,5 +1,7 @@
+// app/layout.tsx
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
+import localFont from 'next/font/local';
 import './globals.css';
 import { Providers } from '@/components/Providers';
 import Header from '@/components/layout/Header';
@@ -19,6 +21,10 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
+const MonoRegular = localFont({
+  src: './MonoRegular.woff2',
+});
+
 export default function RootLayout({
   children,
 }: {
@@ -27,12 +33,11 @@ export default function RootLayout({
   return (
     <html lang="mn">
       <head>
-        <link rel="icon" href="/icons/icon-72x72.png" />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-        {/* Add the missing icon */}
-        <link rel="icon" sizes="144x144" href="/icons/icon-144x144.png" />
+        <link rel="icon" href="/ios/72.png" />
+        <link rel="apple-touch-icon" href="/ios/192.png" />
+        <link rel="icon" sizes="144x144" href="/ios/144.png" />
       </head>
-      <body className={inter.className}>
+      <body className={MonoRegular.className}>
         <Providers>
           <Header />
             <main className="min-h-screen bg-background text-foreground dark:bg-[#0a0a0a]">

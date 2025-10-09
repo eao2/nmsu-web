@@ -1,3 +1,4 @@
+// app/clubs/[slug]/join-form/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -125,12 +126,12 @@ export default function JoinFormBuilderPage() {
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="flex flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-white">Элсэлтийн маягт засах</h1>
+          <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-zinc-100">Элсэлтийн маягт засах</h1>
           <p className="text-muted-foreground dark:text-gray-400 mt-1">{club.title}</p>
         </div>
         <button
           onClick={() => router.back()}
-          className="px-4 py-2 text-foreground bg-card border border-border rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-900 dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-800"
+          className="px-4 py-2 text-foreground bg-card border border-border rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
         >
           Буцах
         </button>
@@ -146,7 +147,7 @@ export default function JoinFormBuilderPage() {
                   type="button"
                   onClick={() => moveField(index, 'up')}
                   disabled={index === 0}
-                  className="w-8 h-8 text-foreground bg-card border border-border rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-900 dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-800"
+                  className="w-8 h-8 text-foreground bg-card border border-border rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-chevron-up" viewBox="0 0 16 16">
                     <path fillRule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z"/>
@@ -158,7 +159,7 @@ export default function JoinFormBuilderPage() {
                     type="button"
                     onClick={() => moveField(index, 'down')}
                     disabled={index === fields.length - 1}
-                    className="w-8 h-8 text-foreground bg-card border border-border rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-900 dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-800"
+                    className="w-8 h-8 text-foreground bg-card border border-border rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-chevron-down" viewBox="0 0 16 16">
                       <path fillRule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
@@ -170,7 +171,7 @@ export default function JoinFormBuilderPage() {
               <button
                 type="button"
                 onClick={() => removeField(index)}
-                  className="px-4 py-2 text-foreground bg-card border border-border rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-900 dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-800"
+                  className="px-4 py-2 text-foreground bg-card border border-border rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
               >
                 Устгах
               </button>
@@ -184,7 +185,7 @@ export default function JoinFormBuilderPage() {
                 <select
                   value={field.type}
                   onChange={(e) => updateField(index, { type: e.target.value })}
-                  className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
+                  className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100"
                 >
                   {FIELD_TYPES.map((type) => (
                     <option key={type.value} value={type.value}>
@@ -202,7 +203,7 @@ export default function JoinFormBuilderPage() {
                   type="text"
                   value={field.label}
                   onChange={(e) => updateField(index, { label: e.target.value })}
-                  className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500"
+                  className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder:text-zinc-500"
                   placeholder="Таны асуулт"
                 />
               </div>
@@ -216,7 +217,7 @@ export default function JoinFormBuilderPage() {
                     type="text"
                     value={field.placeholder || ''}
                     onChange={(e) => updateField(index, { placeholder: e.target.value })}
-                    className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500"
+                    className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder:text-zinc-500"
                     placeholder="Жишээ текст..."
                   />
                 </div>
@@ -233,7 +234,7 @@ export default function JoinFormBuilderPage() {
                     onChange={(e) =>
                       updateField(index, { options: e.target.value.split('\n').filter(Boolean) })
                     }
-                    className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500"
+                    className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder:text-zinc-500"
                     placeholder="Сонголт 1&#10;Сонголт 2&#10;Сонголт 3"
                   />
                 </div>
@@ -248,7 +249,7 @@ export default function JoinFormBuilderPage() {
                     type="text"
                     value={field.accept || ''}
                     onChange={(e) => updateField(index, { accept: e.target.value })}
-                    className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500"
+                    className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder:text-zinc-500"
                     placeholder="image/*,.pdf,.docx"
                   />
                 </div>
@@ -262,7 +263,7 @@ export default function JoinFormBuilderPage() {
                   type="text"
                   value={field.description || ''}
                   onChange={(e) => updateField(index, { description: e.target.value })}
-                  className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500"
+                  className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder:text-zinc-500"
                   placeholder="Нэмэлт тайлбар..."
                 />
               </div>
@@ -287,7 +288,7 @@ export default function JoinFormBuilderPage() {
             <p className="text-muted-foreground dark:text-gray-400 mb-4">Маягтанд талбар нэмээгүй байна</p>
             <button
               onClick={addField}
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 dark:bg-white dark:text-black dark:hover:bg-gray-100"
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 dark:bg-zinc-100 dark:text-black dark:hover:bg-gray-100"
             >
               Эхний талбар нэмэх
             </button>
@@ -297,7 +298,7 @@ export default function JoinFormBuilderPage() {
         {fields.length > 0 && (
           <button
             onClick={addField}
-            className="mb-2 w-full py-3 border-2 border-dashed border-border rounded-lg text-muted-foreground hover:border-primary hover:text-primary transition-colors duration-200 dark:bg-zinc-900 dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-80"
+            className="mb-2 w-full py-3 border-2 border-dashed border-border rounded-lg text-muted-foreground hover:border-primary hover:text-primary transition-colors duration-200 dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-80"
           >
             + Талбар нэмэх
           </button>
@@ -306,14 +307,14 @@ export default function JoinFormBuilderPage() {
         <div className="my-2 flex gap-4 flex-col sm:flex-row">
           <button
             onClick={() => router.back()}
-            className="flex-1 px-6 py-3 border border-border bg-background text-foreground rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-700"
+            className="flex-1 px-6 py-3 border border-border bg-background text-foreground rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:hover:bg-zinc-700"
           >
             Цуцлах
           </button>
           <button
             onClick={handleSave}
             disabled={isSaving}
-            className="flex-1 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-white dark:text-black dark:hover:bg-gray-100"
+            className="flex-1 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-zinc-100 dark:text-black dark:hover:bg-gray-100"
           >
             {isSaving ? 'Хадгалж байна...' : 'Хадгалах'}
           </button>

@@ -1,3 +1,4 @@
+// app/clubs/create/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -100,7 +101,7 @@ export default function CreateClubPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-white mb-8">
+      <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-zinc-100 mb-8">
         Шинэ клуб үүсгэх
       </h1>
 
@@ -121,7 +122,7 @@ export default function CreateClubPage() {
               setFormData({ ...formData, title: e.target.value })
             }
             placeholder="Спортын клуб"
-            className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500"
+            className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder:text-zinc-500"
           />
         </div>
 
@@ -138,7 +139,7 @@ export default function CreateClubPage() {
               setFormData({ ...formData, description: e.target.value })
             }
             placeholder="Клубын тухай дэлгэрэнгүй мэдээлэл..."
-            className="w-full resize-y px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500"
+            className="w-full resize-y px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder:text-zinc-500"
           />
         </div>
 
@@ -161,7 +162,7 @@ export default function CreateClubPage() {
             type="file"
             accept="image/*"
             onChange={(e) => setProfileImage(e.target.files?.[0] || null)}
-            className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-muted file:text-foreground hover:file:bg-muted/80 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:file:bg-zinc-700 dark:file:text-gray-200 dark:hover:file:bg-zinc-600"
+            className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-muted file:text-foreground hover:file:bg-muted/80 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:file:bg-zinc-700 dark:file:text-gray-200 dark:hover:file:bg-zinc-600"
           />
         </div>
 
@@ -184,7 +185,7 @@ export default function CreateClubPage() {
             type="file"
             accept="image/*"
             onChange={(e) => setCoverImage(e.target.files?.[0] || null)}
-            className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-muted file:text-foreground hover:file:bg-muted/80 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:file:bg-zinc-700 dark:file:text-gray-200 dark:hover:file:bg-zinc-600"
+            className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-muted file:text-foreground hover:file:bg-muted/80 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:file:bg-zinc-700 dark:file:text-gray-200 dark:hover:file:bg-zinc-600"
           />
         </div>
 
@@ -219,16 +220,16 @@ export default function CreateClubPage() {
           <button
             type="button"
             onClick={() => router.back()}
-            className="flex justify-center items-center border border-border bg-background text-foreground rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-700 min-w-10 h-10"
+            className="flex justify-center items-center border border-border bg-background text-foreground rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:hover:bg-zinc-700 min-w-10 h-10"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-left-circle dark:text-white" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-left-circle dark:text-zinc-100" viewBox="0 0 16 16">
               <path fillRule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
             </svg>
           </button>
           <button
             type="submit"
             disabled={isLoading}
-              className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-white dark:text-black dark:hover:bg-gray-100"
+              className="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-zinc-100 dark:text-black dark:hover:bg-gray-100"
           >
             {isLoading ? "Үүсгэж байна..." : "Клуб үүсгэх"}
           </button>

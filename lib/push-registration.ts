@@ -1,3 +1,4 @@
+// lib/push-registration.ts
 export async function registerPushNotifications() {
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
     console.log('Push notifications not supported');

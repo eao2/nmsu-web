@@ -1,3 +1,4 @@
+// app/notifications/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -90,7 +91,7 @@ export default function NotificationsPage() {
     <div className="min-h-screen bg-background dark:bg-zinc-950 flex flex-col pb-16">
       <div className="flex-1 container mx-auto px-4 py-6 max-w-4xl">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-foreground dark:text-white mb-2">
+          <h1 className="text-2xl font-bold text-foreground dark:text-zinc-100 mb-2">
             Мэдэгдлүүд
           </h1>
           <p className="text-muted-foreground dark:text-gray-400">
@@ -121,7 +122,7 @@ export default function NotificationsPage() {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-foreground dark:text-white mb-2">
+            <h3 className="text-lg font-medium text-foreground dark:text-zinc-100 mb-2">
               Мэдэгдэл байхгүй байна
             </h3>
             <p className="text-muted-foreground dark:text-gray-400">
@@ -143,7 +144,7 @@ export default function NotificationsPage() {
               >
                 <div className="flex items-start">
                   <div className="flex-1">
-                    <h3 className="font-medium text-foreground dark:text-white mb-1">
+                    <h3 className="font-medium text-foreground dark:text-zinc-100 mb-1">
                       {notif.title}
                     </h3>
                     <p className="text-sm text-muted-foreground dark:text-gray-400 mb-2">
@@ -176,9 +177,9 @@ export default function NotificationsPage() {
           <button
             type="button"
             onClick={() => router.back()}
-            className="flex justify-center items-center border border-border bg-background text-foreground rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-700 w-10 h-10"
+            className="flex justify-center items-center border border-border bg-background text-foreground rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:hover:bg-zinc-700 w-10 h-10"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-left-circle dark:text-white" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-left-circle dark:text-zinc-100" viewBox="0 0 16 16">
               <path fillRule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
             </svg>
           </button>
@@ -186,7 +187,7 @@ export default function NotificationsPage() {
           {unreadCount > 0 && (
             <button
               onClick={markAllAsRead}
-              className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-white dark:text-black dark:hover:bg-gray-100"
+              className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-zinc-100 dark:text-black dark:hover:bg-gray-100"
             >
               Бүгдийг уншсан
             </button>

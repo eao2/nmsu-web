@@ -1,3 +1,4 @@
+// app/clubs/[slug]/edit/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -156,14 +157,14 @@ export default function EditClubPage() {
   if (!club) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-12 text-center">
-        <h1 className="text-2xl font-bold text-foreground dark:text-white mb-2">Клуб олдсонгүй</h1>
+        <h1 className="text-2xl font-bold text-foreground dark:text-zinc-100 mb-2">Клуб олдсонгүй</h1>
       </div>
     );
   }
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-white mb-8">Клуб засах</h1>
+      <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-zinc-100 mb-8">Клуб засах</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6 bg-card border border-border rounded-xl p-6 dark:bg-zinc-900 dark:border-zinc-800">
         <div className="my-2">
@@ -175,7 +176,7 @@ export default function EditClubPage() {
             required
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500"
+            className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder:text-zinc-500"
           />
         </div>
 
@@ -188,7 +189,7 @@ export default function EditClubPage() {
             rows={5}
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            className="w-full px-4 py-2 resize-y border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500"
+            className="w-full px-4 py-2 resize-y border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder:text-zinc-500"
           />
         </div>
 
@@ -210,7 +211,7 @@ export default function EditClubPage() {
             type="file"
             accept="image/*"
             onChange={(e) => setProfileImage(e.target.files?.[0] || null)}
-            className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-muted file:text-foreground hover:file:bg-muted/80 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:file:bg-zinc-700 dark:file:text-gray-200 dark:hover:file:bg-zinc-600"
+            className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-muted file:text-foreground hover:file:bg-muted/80 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:file:bg-zinc-700 dark:file:text-gray-200 dark:hover:file:bg-zinc-600"
           />
         </div>
 
@@ -232,7 +233,7 @@ export default function EditClubPage() {
             type="file"
             accept="image/*"
             onChange={(e) => setCoverImage(e.target.files?.[0] || null)}
-            className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-muted file:text-foreground hover:file:bg-muted/80 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:file:bg-zinc-700 dark:file:text-gray-200 dark:hover:file:bg-zinc-600"
+            className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-muted file:text-foreground hover:file:bg-muted/80 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:file:bg-zinc-700 dark:file:text-gray-200 dark:hover:file:bg-zinc-600"
           />
         </div>
 
@@ -268,28 +269,28 @@ export default function EditClubPage() {
           <button
             type="button"
             onClick={() => router.back()}
-            className="flex-1 px-6 py-3 border border-border bg-background text-foreground rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-700"
+            className="flex-1 px-6 py-3 border border-border bg-background text-foreground rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:hover:bg-zinc-700"
           >
             Буцах
           </button>
           <button
             type="submit"
             disabled={isSaving}
-            className="flex-1 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-white dark:text-black dark:hover:bg-gray-100"
+            className="flex-1 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-zinc-100 dark:text-black dark:hover:bg-gray-100"
           >
             {isSaving ? 'Хадгалж байна...' : 'Хадгалах'}
           </button>
         </div>
 
-        <div className="pt-6 border-border dark:border-zinc-700">
+        {/* <div className="pt-6 border-border dark:border-zinc-700">
           <button
             type="button"
             onClick={handleDelete}
-            className="w-full px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+            className="w-full px-6 py-3 bg-red-600 text-zinc-100 rounded-lg hover:bg-red-700 transition-colors duration-200"
           >
             Клуб устгах
           </button>
-        </div>
+        </div> */}
       </form>
     </div>
   );

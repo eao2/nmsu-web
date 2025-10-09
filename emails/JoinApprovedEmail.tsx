@@ -1,3 +1,4 @@
+// emails/JoinApprovedEmail.tsx
 import {
   Body,
   Button,

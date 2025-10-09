@@ -1,3 +1,4 @@
+// app/api/upload/cleanup/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { deleteFiles } from "@/lib/deleteFiles";

@@ -1,3 +1,4 @@
+// app/api/clubs/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -5,11 +6,49 @@ import { prisma } from '@/lib/prisma';
 import { generateSlug } from '@/lib/utils';
 import { confirmUploadedFiles } from '@/lib/confirmUploadedFiles';
 
+// Define types for better type safety
+type ClubMember = {
+  id: string;
+  isAdmin: boolean;
+  userId: string;
+  clubId: string;
+  joinedAt: Date;
+  user: {
+    id: string;
+    name: string | null;
+    image: string | null;
+  };
+};
+
+type Club = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  profileImage: string | null;
+  coverImage: string | null;
+  isPublic: boolean;
+  isActive: boolean;
+  isConfirmed: boolean;
+  creatorId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  creator: {
+    id: string;
+    name: string | null;
+    image: string | null;
+  };
+  members: ClubMember[];
+  _count: {
+    members: number;
+    posts: number;
+  };
+};
+
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     const { searchParams } = new URL(request.url);
-    const filter = searchParams.get('filter') || 'all';
     const slug = searchParams.get('slug');
 
     if (slug) {
@@ -87,24 +126,59 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    let where: any = {
-      isActive: true,
-      isConfirmed: true,
-    };
-
-    if (filter === 'my' && session?.user) {
-      where = {
-        isActive: true,
-        members: {
-          some: {
-            userId: session.user.id,
+    // Get user's clubs
+    let myClubs: Array<Club> = [];
+    if (session?.user) {
+      myClubs = await prisma.club.findMany({
+        where: {
+          members: {
+            some: {
+              userId: session.user.id,
+            },
           },
         },
-      };
+        include: {
+          creator: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+            },
+          },
+          members: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  image: true,
+                },
+              },
+            },
+          },
+          _count: {
+            select: {
+              members: true,
+              posts: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
     }
 
-    const clubs = await prisma.club.findMany({
-      where,
+    // Get all other clubs (excluding user's clubs)
+    const myClubIds = myClubs.map(club => club.id);
+    const otherClubs: Array<Club> = await prisma.club.findMany({
+      where: {
+        isActive: true,
+        isConfirmed: true,
+        id: {
+          notIn: myClubIds,
+        },
+      },
       include: {
         creator: {
           select: {
@@ -136,7 +210,10 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(clubs);
+    return NextResponse.json({
+      myClubs,
+      otherClubs,
+    });
   } catch (error) {
     console.error('Get clubs error:', error);
     return NextResponse.json(

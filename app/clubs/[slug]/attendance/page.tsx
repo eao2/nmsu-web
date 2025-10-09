@@ -1,3 +1,4 @@
+// app/clubs/[slug]/attendance/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -438,7 +439,7 @@ export default function AttendancePage() {
           <p className="text-sm">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="mt-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+            className="mt-2 px-4 py-2 bg-red-600 text-zinc-100 rounded-lg hover:bg-red-700 transition-colors duration-200"
           >
             Дахин ачаалах
           </button>
@@ -460,7 +461,7 @@ export default function AttendancePage() {
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
       <div className="mb-4 sm:mb-8">
-        <h1 className="text-xl sm:text-3xl font-bold tracking-tight text-foreground dark:text-white">
+        <h1 className="text-xl sm:text-xl font-bold tracking-tight text-foreground dark:text-zinc-100">
           Ирц
         </h1>
         <p className="text-muted-foreground dark:text-gray-400 mt-1 text-xs sm:text-base">
@@ -473,8 +474,8 @@ export default function AttendancePage() {
           onClick={() => setViewMode("record")}
           className={`px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-xs sm:text-base whitespace-nowrap flex-shrink-0 ${
             viewMode === "record"
-              ? "bg-primary text-primary-foreground dark:bg-white dark:text-black bg-black text-white"
-              : "bg-card text-foreground hover:bg-muted/50 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800"
+              ? "bg-primary text-primary-foreground dark:bg-zinc-100 dark:text-black bg-black text-zinc-100"
+              : "bg-card text-foreground hover:bg-muted/50 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
           }`}
         >
           Ирц бүртгэх
@@ -483,8 +484,8 @@ export default function AttendancePage() {
           onClick={() => setViewMode("calendar")}
           className={`px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-xs sm:text-base whitespace-nowrap flex-shrink-0 ${
             viewMode === "calendar"
-              ? "bg-primary text-primary-foreground dark:bg-white dark:text-black bg-black text-white"
-              : "bg-card text-foreground hover:bg-muted/50 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800"
+              ? "bg-primary text-primary-foreground dark:bg-zinc-100 dark:text-black bg-black text-zinc-100"
+              : "bg-card text-foreground hover:bg-muted/50 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
           }`}
         >
           Огноогоор
@@ -493,8 +494,8 @@ export default function AttendancePage() {
           onClick={() => setViewMode("history")}
           className={`px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-xs sm:text-base whitespace-nowrap flex-shrink-0 ${
             viewMode === "history"
-              ? "bg-primary text-primary-foreground dark:bg-white dark:text-black bg-black text-white"
-              : "bg-card text-foreground hover:bg-muted/50 dark:bg-zinc-900 dark:text-white dark:hover:bg-zinc-800"
+              ? "bg-primary text-primary-foreground dark:bg-zinc-100 dark:text-black bg-black text-zinc-100"
+              : "bg-card text-foreground hover:bg-muted/50 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
           }`}
         >
           Түүх
@@ -503,8 +504,8 @@ export default function AttendancePage() {
           onClick={() => setViewMode("member")}
           className={`px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-xs sm:text-base whitespace-nowrap flex-shrink-0 ${
             viewMode === "member"
-              ? "bg-primary text-primary-foreground dark:bg-white dark:text-black bg-black text-white"
-              : "bg-card text-foreground border-border hover:bg-muted/50 dark:bg-zinc-900 dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-800"
+              ? "bg-primary text-primary-foreground dark:bg-zinc-100 dark:text-black bg-black text-zinc-100"
+              : "bg-card text-foreground border-border hover:bg-muted/50 dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
           }`}
         >
           Гишүүнээр
@@ -521,7 +522,7 @@ export default function AttendancePage() {
               <select
                 value={selectedMember}
                 onChange={(e) => setSelectedMember(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white text-sm"
+                className="w-full px-3 sm:px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 text-sm"
               >
                 <option value="">Гишүүн сонгоно уу</option>
                 {members.map((member) => (
@@ -541,7 +542,7 @@ export default function AttendancePage() {
                 onChange={(e) =>
                   setDateRange({ ...dateRange, start: e.target.value })
                 }
-                className="w-full px-3 sm:px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white text-sm"
+                className="w-full px-3 sm:px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 text-sm"
               />
             </div>
             <div>
@@ -554,7 +555,7 @@ export default function AttendancePage() {
                 onChange={(e) =>
                   setDateRange({ ...dateRange, end: e.target.value })
                 }
-                className="w-full px-3 sm:px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white text-sm"
+                className="w-full px-3 sm:px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 text-sm"
                 max={new Date().toISOString().split("T")[0]}
               />
             </div>
@@ -570,16 +571,16 @@ export default function AttendancePage() {
                 <table className="min-w-full">
                   <thead className="bg-muted/50 border-b border-border dark:bg-zinc-800/50 dark:border-zinc-700">
                     <tr>
-                      <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-semibold text-foreground dark:text-white">
+                      <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-semibold text-foreground dark:text-zinc-100">
                         Огноо
                       </th>
-                      <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-semibold text-foreground dark:text-white hidden sm:table-cell">
+                      <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-semibold text-foreground dark:text-zinc-100 hidden sm:table-cell">
                         Тайлбар
                       </th>
-                      <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-semibold text-foreground dark:text-white">
+                      <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-semibold text-foreground dark:text-zinc-100">
                         Төлөв
                       </th>
-                      <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-semibold text-foreground dark:text-white hidden md:table-cell">
+                      <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-semibold text-foreground dark:text-zinc-100 hidden md:table-cell">
                         Тэмдэглэл
                       </th>
                     </tr>
@@ -590,7 +591,7 @@ export default function AttendancePage() {
                         key={record.id}
                         className="hover:bg-muted/50 dark:hover:bg-zinc-800/50"
                       >
-                        <td className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-foreground dark:text-white whitespace-nowrap">
+                        <td className="px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-foreground dark:text-zinc-100 whitespace-nowrap">
                           {new Date(record.sessionDate).toLocaleDateString("mn-MN", {
                             month: "short",
                             day: "numeric",
@@ -634,7 +635,7 @@ export default function AttendancePage() {
         </div>
       ) : viewMode === "calendar" ? (
         <div className="bg-card border border-border rounded-xl p-3 sm:p-6 dark:bg-zinc-900 dark:border-zinc-800">
-          <h2 className="text-base sm:text-xl font-bold text-foreground dark:text-white mb-4">
+          <h2 className="text-base sm:text-xl font-bold text-foreground dark:text-zinc-100 mb-4">
             Ирцийн огноонууд
           </h2>
 
@@ -654,7 +655,7 @@ export default function AttendancePage() {
                     className="cursor-pointer"
                   >
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-medium text-foreground dark:text-white text-xs sm:text-base pr-8">
+                      <h3 className="font-medium text-foreground dark:text-zinc-100 text-xs sm:text-base pr-8">
                         {new Date(session.date).toLocaleDateString("mn-MN", {
                           year: "numeric",
                           month: "long",
@@ -705,7 +706,7 @@ export default function AttendancePage() {
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white text-sm"
+                className="w-full px-3 sm:px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 text-sm"
                 max={new Date().toISOString().split("T")[0]}
               />
               {isPastDate(selectedDate) && (
@@ -723,7 +724,7 @@ export default function AttendancePage() {
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Жишээ: Долоо хоногийн хурал, сэдэв, бүрэлдэхүүн зэрэг дэлгэрэнгүй мэдээлэл оруулна уу..."
                 rows={5}
-                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 resize-none dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500 text-sm"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 resize-none dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder:text-zinc-500 text-sm"
                 disabled={isPastDate(selectedDate)}
               />
             </div>
@@ -740,13 +741,13 @@ export default function AttendancePage() {
                   <table className="min-w-full">
                     <thead className="bg-muted/50 border-b border-border dark:bg-zinc-800/50 dark:border-zinc-700">
                       <tr>
-                        <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-semibold text-foreground dark:text-white">
+                        <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-semibold text-foreground dark:text-zinc-100">
                           Гишүүн
                         </th>
-                        <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-semibold text-foreground dark:text-white">
+                        <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-semibold text-foreground dark:text-zinc-100">
                           Төлөв
                         </th>
-                        <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-semibold text-foreground dark:text-white md:table-cell">
+                        <th className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-semibold text-foreground dark:text-zinc-100 md:table-cell">
                           Тэмдэглэл
                         </th>
                       </tr>
@@ -768,12 +769,12 @@ export default function AttendancePage() {
                                   className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border border-border dark:border-zinc-700 flex-shrink-0"
                                 />
                               ) : (
-                                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-muted rounded-full flex items-center justify-center text-foreground font-medium border border-border dark:bg-zinc-800 dark:text-white dark:border-zinc-700 flex-shrink-0 text-xs sm:text-sm">
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-muted rounded-full flex items-center justify-center text-foreground font-medium border border-border dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700 flex-shrink-0 text-xs sm:text-sm">
                                   {member.user.name?.charAt(0) || "U"}
                                 </div>
                               )}
                               <div className="min-w-0 flex-1">
-                                <div className="font-medium text-foreground dark:text-white text-xs sm:text-sm truncate">
+                                <div className="font-medium text-foreground dark:text-zinc-100 text-xs sm:text-sm truncate">
                                   {member.user.name}
                                 </div>
                                 <div className="text-xs text-muted-foreground dark:text-gray-400 truncate">
@@ -788,7 +789,7 @@ export default function AttendancePage() {
                               onChange={(e) =>
                                 handleStatusChange(member.userId, e.target.value)
                               }
-                              className="w-full min-w-28 px-2 py-1.5 sm:px-3 sm:py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white text-xs"
+                              className="w-full min-w-28 px-2 py-1.5 sm:px-3 sm:py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 text-xs"
                               disabled={isPastDate(selectedDate)}
                             >
                               {STATUS_OPTIONS.map((status) => (
@@ -806,7 +807,7 @@ export default function AttendancePage() {
                                 handleNotesChange(member.userId, e.target.value)
                               }
                               placeholder="Тэмдэглэл..."
-                              className="w-full min-w-28 px-3 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500 text-sm"
+                              className="w-full min-w-28 px-3 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder:text-zinc-500 text-sm"
                               disabled={isPastDate(selectedDate)}
                             />
                           </td>
@@ -821,7 +822,7 @@ export default function AttendancePage() {
                 <button
                   onClick={handleSave}
                   disabled={isSaving || isPastDate(selectedDate)}
-                  className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-white dark:text-black dark:hover:bg-gray-100 font-medium text-sm sm:text-base"
+                  className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-zinc-100 dark:text-black dark:hover:bg-gray-100 font-medium text-sm sm:text-base"
                 >
                   {isSaving ? "Хадгалж байна..." : "Хадгалах"}
                 </button>
@@ -843,7 +844,7 @@ export default function AttendancePage() {
                   onChange={(e) =>
                     setDateRange({ ...dateRange, start: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white text-sm"
+                  className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 text-sm"
                 />
               </div>
               <div className="w-full sm:w-auto">
@@ -856,7 +857,7 @@ export default function AttendancePage() {
                   onChange={(e) =>
                     setDateRange({ ...dateRange, end: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white text-sm"
+                  className="w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 text-sm"
                   max={new Date().toISOString().split("T")[0]}
                 />
               </div>
@@ -864,7 +865,7 @@ export default function AttendancePage() {
             <button
               onClick={exportToCSV}
               disabled={history.length === 0}
-              className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto px-4 py-2 bg-green-600 text-zinc-100 rounded-lg hover:bg-green-700 transition-colors duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Excel татах
             </button>
@@ -884,7 +885,7 @@ export default function AttendancePage() {
                   >
                     <div className="bg-muted/50 px-3 sm:px-4 py-2 sm:py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-border dark:bg-zinc-700/50 dark:border-zinc-600">
                       <div className="flex-1 min-w-0 w-full sm:w-auto">
-                        <h3 className="font-semibold text-foreground dark:text-white text-xs sm:text-base">
+                        <h3 className="font-semibold text-foreground dark:text-zinc-100 text-xs sm:text-base">
                           {new Date(session.date).toLocaleDateString("mn-MN", {
                             year: "numeric",
                             month: "long",
@@ -905,13 +906,13 @@ export default function AttendancePage() {
                         <table className="w-full">
                           <thead className="bg-muted/50 dark:bg-zinc-700/50">
                             <tr>
-                              <th className="px-3 sm:px-4 py-2 text-left text-xs font-semibold text-foreground dark:text-white">
+                              <th className="px-3 sm:px-4 py-2 text-left text-xs font-semibold text-foreground dark:text-zinc-100">
                                 Гишүүн
                               </th>
-                              <th className="px-3 sm:px-4 py-2 text-left text-xs font-semibold text-foreground dark:text-white">
+                              <th className="px-3 sm:px-4 py-2 text-left text-xs font-semibold text-foreground dark:text-zinc-100">
                                 Төлөв
                               </th>
-                              <th className="px-3 sm:px-4 py-2 text-left text-xs font-semibold text-foreground dark:text-white hidden sm:table-cell">
+                              <th className="px-3 sm:px-4 py-2 text-left text-xs font-semibold text-foreground dark:text-zinc-100 hidden sm:table-cell">
                                 Тэмдэглэл
                               </th>
                             </tr>
@@ -933,12 +934,12 @@ export default function AttendancePage() {
                                         className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover border border-border dark:border-zinc-700 flex-shrink-0"
                                       />
                                     ) : (
-                                      <div className="w-6 h-6 sm:w-8 sm:h-8 bg-muted rounded-full flex items-center justify-center text-foreground text-xs font-medium border border-border dark:bg-zinc-800 dark:text-white dark:border-zinc-700 flex-shrink-0">
+                                      <div className="w-6 h-6 sm:w-8 sm:h-8 bg-muted rounded-full flex items-center justify-center text-foreground text-xs font-medium border border-border dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700 flex-shrink-0">
                                         {att.user.name?.charAt(0) || "U"}
                                       </div>
                                     )}
                                     <div className="min-w-0 flex-1">
-                                      <div className="text-xs sm:text-sm font-medium text-foreground dark:text-white truncate">
+                                      <div className="text-xs sm:text-sm font-medium text-foreground dark:text-zinc-100 truncate">
                                         {att.user.name}
                                       </div>
                                       <div className="text-xs text-muted-foreground dark:text-gray-400 truncate">

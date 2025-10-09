@@ -1,3 +1,4 @@
+// emails/JoinRequestEmail.tsx
 import {
   Body,
   Button,

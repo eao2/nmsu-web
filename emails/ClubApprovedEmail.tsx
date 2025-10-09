@@ -1,3 +1,4 @@
+// emails/ClubApprovedEmail.tsx
 import {
   Body,
   Button,

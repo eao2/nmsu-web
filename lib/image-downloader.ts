@@ -1,3 +1,4 @@
+// lib/image-downloader.ts
 import fetch from "node-fetch";
 import sharp from "sharp";
 import { writeFile, mkdir, unlink, access } from "fs/promises";

@@ -1,3 +1,4 @@
+// app/clubs/[slug]/requests/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -74,7 +75,7 @@ export default function JoinRequestsPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-white">Элсэлтийн хүсэлтүүд</h1>
+        <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-zinc-100">Элсэлтийн хүсэлтүүд</h1>
         <p className="text-muted-foreground dark:text-gray-400 mt-1">{club.title}</p>
       </div>
 
@@ -83,8 +84,8 @@ export default function JoinRequestsPage() {
           onClick={() => setFilter('pending')}
           className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
             filter === 'pending'
-              ? 'bg-primary text-primary-foreground dark:bg-white dark:text-black'
-              : 'bg-card text-foreground border border-border hover:bg-muted/50 dark:bg-zinc-900 dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-800'
+              ? 'bg-primary text-primary-foreground dark:bg-zinc-100 dark:text-black'
+              : 'bg-card text-foreground border border-border hover:bg-muted/50 dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800'
           }`}
         >
           Хүлээгдэж буй
@@ -93,8 +94,8 @@ export default function JoinRequestsPage() {
           onClick={() => setFilter('all')}
           className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
             filter === 'all'
-              ? 'bg-primary text-primary-foreground dark:bg-white dark:text-black'
-              : 'bg-card text-foreground border border-border hover:bg-muted/50 dark:bg-zinc-900 dark:text-white dark:border-zinc-700 dark:hover:bg-zinc-800'
+              ? 'bg-primary text-primary-foreground dark:bg-zinc-100 dark:text-black'
+              : 'bg-card text-foreground border border-border hover:bg-muted/50 dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800'
           }`}
         >
           Бүгд
@@ -123,12 +124,12 @@ export default function JoinRequestsPage() {
                       className="w-12 h-12 rounded-full object-cover border border-border dark:border-zinc-700"
                     />
                   ) : (
-                    <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center text-foreground font-medium border border-border dark:bg-zinc-800 dark:text-white dark:border-zinc-700">
+                    <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center text-foreground font-medium border border-border dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700">
                       {request.user.name?.charAt(0) || 'U'}
                     </div>
                   )}
                   <div>
-                    <h3 className="font-semibold text-foreground dark:text-white">{request.user.name}</h3>
+                    <h3 className="font-semibold text-foreground dark:text-zinc-100">{request.user.name}</h3>
                     <p className="text-sm text-muted-foreground dark:text-gray-400">
                       {request.user.studentCode} • {request.user.className}
                     </p>
@@ -173,7 +174,7 @@ export default function JoinRequestsPage() {
         {/* Request Detail */}
         {selectedRequest && (
           <div className="lg:sticky lg:top-8 bg-card border border-border rounded-xl p-6 h-fit dark:bg-zinc-900 dark:border-zinc-800">
-            <h2 className="text-xl font-bold text-foreground dark:text-white mb-4">Хүсэлтийн дэлгэрэнгүй</h2>
+            <h2 className="text-xl font-bold text-foreground dark:text-zinc-100 mb-4">Хүсэлтийн дэлгэрэнгүй</h2>
 
             <div className="space-y-4 mb-6">
               {Object.entries(selectedRequest.answers).map(([key, fieldData]: [string, any]) => {
@@ -191,7 +192,7 @@ export default function JoinRequestsPage() {
                         href={value}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors duration-200 no-underline dark:text-white dark:hover:text-gray-300"
+                        className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors duration-200 no-underline dark:text-zinc-100 dark:hover:text-gray-300"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path
@@ -217,13 +218,13 @@ export default function JoinRequestsPage() {
               <div className="flex gap-3">
                 <button
                   onClick={() => handleAction(selectedRequest.id, 'reject')}
-                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                  className="flex-1 px-4 py-2 bg-red-600 text-zinc-100 rounded-lg hover:bg-red-700 transition-colors duration-200"
                 >
                   Татгалзах
                 </button>
                 <button
                   onClick={() => handleAction(selectedRequest.id, 'approve')}
-                  className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
+                  className="flex-1 px-4 py-2 bg-green-600 text-zinc-100 rounded-lg hover:bg-green-700 transition-colors duration-200"
                 >
                   Зөвшөөрөх
                 </button>

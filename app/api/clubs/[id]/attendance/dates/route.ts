@@ -1,3 +1,4 @@
+// app/api/clubs/[id]/attendance/dates/route.ts
 // /api/clubs/[id]/attendance/dates/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';

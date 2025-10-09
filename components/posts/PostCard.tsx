@@ -1,3 +1,4 @@
+// components/posts/PostCard.tsx
 "use client";
 
 import { useState } from "react";
@@ -38,7 +39,7 @@ export default function PostCard({ post, clubSlug }: PostCardProps) {
   };
 
   return (
-    <div className="my-4 bg-white border border-border rounded-lg overflow-hidden text-foreground dark:bg-zinc-900 dark:border-zinc-800 dark:text-white">
+    <div className="my-4 bg-zinc-100 border border-border rounded-lg overflow-hidden text-foreground dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-100">
       <div className="p-6">
         <div className="flex items-center gap-3 mb-4">
           {post.author.image ? (
@@ -50,12 +51,12 @@ export default function PostCard({ post, clubSlug }: PostCardProps) {
               className="w-10 h-10 rounded-full object-cover border border-border dark:border-zinc-700"
             />
           ) : (
-            <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center text-foreground font-medium border border-border dark:bg-zinc-800 dark:text-white dark:border-zinc-700">
+            <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center text-foreground font-medium border border-border dark:bg-zinc-800 dark:text-zinc-100 dark:border-zinc-700">
               {post.author.name?.charAt(0) || "U"}
             </div>
           )}
           <div className="flex-1">
-            <h3 className="font-medium text-foreground dark:text-white">{post.author.name}</h3>
+            <h3 className="font-medium text-foreground dark:text-zinc-100">{post.author.name}</h3>
             <p className="text-sm text-muted-foreground dark:text-gray-400">
               {new Date(post.createdAt).toLocaleDateString("mn-MN", {
                 month: "short",

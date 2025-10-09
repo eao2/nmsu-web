@@ -1,3 +1,4 @@
+// app/api/clubs/[id]/leave-requests/route.ts
 // src/app/api/clubs/[id]/leave-requests/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';

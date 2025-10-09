@@ -1,3 +1,4 @@
+// app/clubs/[slug]/leave/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -53,7 +54,7 @@ export default function LeaveClubPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold tracking-tight text-foreground dark:text-white mb-2">Клубаас гарах</h1>
+      <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-zinc-100 mb-2">Клубаас гарах</h1>
       <p className="text-muted-foreground dark:text-gray-400 mb-8">
         Та энэ клубаас гарах хүсэлт илгээх гэж байна. Админ таны хүсэлтийг хянаж шийдвэр гаргана.
       </p>
@@ -67,7 +68,7 @@ export default function LeaveClubPage() {
             rows={5}
             value={reason}
             onChange={(e) => setReason(e.target.value)}
-            className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent resize-none transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500"
+            className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent resize-none transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder:text-zinc-500"
             placeholder="Та яагаад клубаас гарах гэж байгаагаа бичиж болно..."
           />
         </div>
@@ -82,14 +83,14 @@ export default function LeaveClubPage() {
           <button
             type="button"
             onClick={() => router.back()}
-            className="flex-1 px-6 py-3 border border-border bg-background text-foreground rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-700"
+            className="flex-1 px-6 py-3 border border-border bg-background text-foreground rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:hover:bg-zinc-700"
           >
             Буцах
           </button>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="flex-1 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 disabled:opacity-50"
+            className="flex-1 px-6 py-3 bg-red-600 text-zinc-100 rounded-lg hover:bg-red-700 transition-colors duration-200 disabled:opacity-50"
           >
             {isSubmitting ? 'Илгээж байна...' : 'Хүсэлт илгээх'}
           </button>

@@ -12,10 +12,9 @@ app.prepare().then(() => {
     handle(req, res);
   });
 
-  // Initialize Socket.IO
   const io = new Server(httpServer, {
     cors: {
-      origin: "*", // or your domain for more security
+      origin: "*",
     },
   });
 

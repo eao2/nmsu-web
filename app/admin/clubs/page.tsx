@@ -1,3 +1,4 @@
+// app/admin/clubs/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -72,8 +73,8 @@ export default function AdminClubsPage() {
           onClick={() => setFilter('pending')}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             filter === 'pending'
-              ? 'bg-blue-600 text-white'
-              : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+              ? 'bg-blue-600 text-zinc-100'
+              : 'bg-zinc-100 text-gray-700 border border-gray-300 hover:bg-gray-50'
           }`}
         >
           Хүлээгдэж буй
@@ -82,8 +83,8 @@ export default function AdminClubsPage() {
           onClick={() => setFilter('all')}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             filter === 'all'
-              ? 'bg-blue-600 text-white'
-              : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+              ? 'bg-blue-600 text-zinc-100'
+              : 'bg-zinc-100 text-gray-700 border border-gray-300 hover:bg-gray-50'
           }`}
         >
           Бүх клубууд
@@ -92,7 +93,7 @@ export default function AdminClubsPage() {
 
       <div className="space-y-4">
         {clubs.map((club) => (
-          <div key={club.id} className="bg-white rounded-xl shadow-lg p-6">
+          <div key={club.id} className="bg-zinc-100 rounded-xl shadow-lg p-6">
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-4">
                 {club.profileImage ? (
@@ -104,7 +105,7 @@ export default function AdminClubsPage() {
                     className="w-16 h-16 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                  <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-zinc-100 font-bold text-xl">
                     {club.title.charAt(0)}
                   </div>
                 )}
@@ -125,7 +126,7 @@ export default function AdminClubsPage() {
                 {!club.isConfirmed && (
                   <button
                     onClick={() => handleApprove(club.id)}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    className="px-4 py-2 bg-green-600 text-zinc-100 rounded-lg hover:bg-green-700 transition-colors"
                   >
                     Баталгаажуулах
                   </button>

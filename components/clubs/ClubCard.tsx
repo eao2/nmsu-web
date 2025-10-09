@@ -2,10 +2,11 @@ import Link from "next/link";
 import Image from "next/image";
 
 interface ClubCardProps {
+  isMy?: boolean;
   club: any;
 }
 
-export default function ClubCard({ club }: ClubCardProps) {
+export default function ClubCard({ club, isMy }: ClubCardProps) {
   return (
     <Link href={`/clubs/${club.slug}`} className="block no-underline">
       <div className="rounded-xl border border-border bg-card text-card-foreground hover:bg-muted/50 transition-all duration-200 cursor-pointer overflow-hidden dark:bg-zinc-900 dark:border-zinc-800 dark:hover:bg-zinc-800/50">
@@ -33,14 +34,14 @@ export default function ClubCard({ club }: ClubCardProps) {
                   className="rounded-full object-cover border border-border dark:border-zinc-700"
                 />
               ) : (
-                <div className="w-full h-full rounded-full bg-primary flex items-center justify-center text-primary-foreground font-semibold text-lg border border-border dark:bg-white dark:text-black dark:border-white">
+                <div className="w-full h-full rounded-full bg-primary flex items-center justify-center text-primary-foreground font-semibold text-lg border border-border dark:bg-zinc-100 dark:text-black dark:border-white">
                   {club.title.charAt(0)}
                 </div>
               )}
             </div>
 
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-lg text-foreground dark:text-white truncate">
+              <h3 className="font-semibold text-lg text-foreground dark:text-zinc-100 truncate">
                 {club.title}
               </h3>
               <p className="text-sm text-muted-foreground dark:text-gray-400">
@@ -54,8 +55,20 @@ export default function ClubCard({ club }: ClubCardProps) {
           </p>
 
           <div className="flex items-center justify-between text-sm text-muted-foreground dark:text-gray-400">
-            <span>{club._count?.posts || 0} нийтлэл</span>
-            <span
+            {isMy ? (
+              <span>{club._count?.posts || 0} нийтлэл</span>
+            ) : (
+              <span
+                className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                  club.allowJoinRequests
+                    ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400"
+                    : "bg-gray-100 text-gray-700 dark:bg-zinc-800 dark:text-gray-400"
+                }`}
+              >
+                {club.allowJoinRequests ? "Элсэлт Авна" : "Элсэлт Хаалттай"}
+              </span>
+            )}
+            {/* <span
               className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                 club.isPublic
                   ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400"
@@ -63,7 +76,7 @@ export default function ClubCard({ club }: ClubCardProps) {
               }`}
             >
               {club.isPublic ? "Нээлттэй" : "Хаалттай"}
-            </span>
+            </span> */}
           </div>
         </div>
       </div>

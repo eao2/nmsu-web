@@ -1,3 +1,4 @@
+// lib/confirmUploadedFiles.ts
 import { prisma } from '@/lib/prisma'; // Assuming this import path is correct
 
 /**

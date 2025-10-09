@@ -1,3 +1,4 @@
+// components/posts/PostForm.tsx
 'use client';
 
 import { useState } from 'react';
@@ -96,7 +97,7 @@ export default function PostForm({ clubId, onPostCreated }: PostFormProps) {
         onChange={(e) => setContent(e.target.value)}
         placeholder="Юу бодож байна..."
         rows={3}
-        className="w-full px-4 py-3 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent resize-none transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500"
+        className="w-full px-4 py-3 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent resize-none transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder:text-zinc-500"
       />
 
       {files.length > 0 && (
@@ -120,7 +121,7 @@ export default function PostForm({ clubId, onPostCreated }: PostFormProps) {
       )}
 
       <div className="mt-4 flex items-center justify-between">
-        <label className={`cursor-pointer text-muted-foreground hover:text-foreground transition-colors duration-200 ${isUploading ? 'opacity-50 pointer-events-none' : ''} dark:text-gray-400 dark:hover:text-white`}>
+        <label className={`cursor-pointer text-muted-foreground hover:text-foreground transition-colors duration-200 ${isUploading ? 'opacity-50 pointer-events-none' : ''} dark:text-gray-400 dark:hover:text-zinc-100`}>
           <svg
             className="w-6 h-6"
             fill="none"
@@ -150,7 +151,7 @@ export default function PostForm({ clubId, onPostCreated }: PostFormProps) {
         <button
           type="submit"
           disabled={!content.trim() || isSubmitting || isUploading}
-          className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-white dark:text-black dark:hover:bg-gray-100"
+          className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-zinc-100 dark:text-black dark:hover:bg-gray-100"
         >
           {isSubmitting ? 'Нийтэлж байна...' : 'Нийтлэх'}
         </button>

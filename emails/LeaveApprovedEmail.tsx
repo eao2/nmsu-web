@@ -1,3 +1,4 @@
+// emails/LeaveApprovedEmail.tsx
 import {
   Body,
   Container,

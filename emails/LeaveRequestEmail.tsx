@@ -1,3 +1,4 @@
+// emails/LeaveRequestEmail.tsx
 import {
   Body,
   Button,

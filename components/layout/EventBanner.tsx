@@ -65,13 +65,13 @@ export default function EventBanner() {
             {/* Content */}
             <div className="relative z-10 h-full flex flex-col justify-end p-6 md:p-8">
               <div className="max-w-2xl">
-                <h2 className="text-2xl md:text-3xl font-bold text-white mb-3 tracking-tight">
+                <h2 className="text-2xl md:text-xl font-bold text-zinc-100 mb-3 tracking-tight">
                   {event.title}
                 </h2>
-                <p className="text-white/90 mb-4 text-sm md:text-base line-clamp-2 md:line-clamp-none">
+                <p className="text-zinc-100/90 mb-4 text-sm md:text-base line-clamp-2 md:line-clamp-none">
                   {event.description}
                 </p>
-                <div className="flex items-center text-white/80 text-sm">
+                <div className="flex items-center text-zinc-100/80 text-sm">
                   <svg
                     className="w-4 h-4 mr-2"
                     fill="none"

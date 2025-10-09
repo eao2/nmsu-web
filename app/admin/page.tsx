@@ -1,3 +1,4 @@
+// app/admin/page.tsx
 'use client';
 
 import { useSession } from 'next-auth/react';
@@ -18,7 +19,7 @@ export default function AdminPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Link
           href="/admin/clubs"
-          className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+          className="bg-zinc-100 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
         >
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -45,7 +46,7 @@ export default function AdminPage() {
 
         <Link
           href="/admin/events"
-          className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+          className="bg-zinc-100 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
         >
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -72,7 +73,7 @@ export default function AdminPage() {
 
         <Link
           href="/admin/reports"
-          className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+          className="bg-zinc-100 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
         >
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">

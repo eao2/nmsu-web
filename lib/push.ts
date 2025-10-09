@@ -1,3 +1,4 @@
+// lib/push.ts
 import webpush from 'web-push';
 import { prisma } from './prisma';
 

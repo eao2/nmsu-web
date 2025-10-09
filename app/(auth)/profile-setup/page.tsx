@@ -1,3 +1,4 @@
+// app/(auth)/profile-setup/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -112,7 +113,7 @@ export default function ProfileSetupPage() {
 
   if (status === 'loading' || (status === 'authenticated' && session?.user?.profileComplete)) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4 dark:bg-zinc-900 text-lg dark:text-white">
+      <div className="min-h-screen flex items-center justify-center bg-background px-4 dark:bg-zinc-900 text-lg dark:text-zinc-100">
         <div role="status">
             <svg aria-hidden="true" className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
@@ -133,7 +134,7 @@ export default function ProfileSetupPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4 dark:bg-zinc-900">
       <div className="max-w-md w-full bg-card border border-border rounded-xl p-8 dark:bg-zinc-900 dark:border-zinc-800">
-        <h1 className="text-2xl font-bold text-foreground dark:text-white mb-2 tracking-tight">
+        <h1 className="text-2xl font-bold text-foreground dark:text-zinc-100 mb-2 tracking-tight">
           Профайл үүсгэх
         </h1>
         <p className="text-muted-foreground dark:text-gray-400 mb-6">
@@ -154,7 +155,7 @@ export default function ProfileSetupPage() {
                 setFormData({ ...formData, phone: e.target.value });
                 if (errors.phone) setErrors({ ...errors, phone: undefined }); 
               }}
-              className={`w-full px-4 py-2 border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:text-white dark:placeholder:text-zinc-500 ${
+              className={`w-full px-4 py-2 border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500 ${
                 errors.phone ? 'border-red-500 focus-visible:ring-red-500' : 'border-border dark:border-zinc-700'
               }`}
               placeholder="99001122"
@@ -177,7 +178,7 @@ export default function ProfileSetupPage() {
                 setFormData({ ...formData, className: e.target.value.toUpperCase() });
                 if (errors.className) setErrors({ ...errors, className: undefined });
               }}
-              className={`w-full px-4 py-2 border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:text-white dark:placeholder:text-zinc-500 ${
+              className={`w-full px-4 py-2 border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500 ${
                 errors.className ? 'border-red-500 focus-visible:ring-red-500' : 'border-border dark:border-zinc-700'
               }`}
               placeholder="SE106-1"
@@ -200,7 +201,7 @@ export default function ProfileSetupPage() {
                 setFormData({ ...formData, studentCode: e.target.value.toUpperCase() });
                 if (errors.studentCode) setErrors({ ...errors, studentCode: undefined });
               }}
-              className={`w-full px-4 py-2 border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:text-white dark:placeholder:text-zinc-500 ${
+              className={`w-full px-4 py-2 border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder:text-zinc-500 ${
                 errors.studentCode ? 'border-red-500 focus-visible:ring-red-500' : 'border-border dark:border-zinc-700'
               }`}
               placeholder="SE25D99"
@@ -213,7 +214,7 @@ export default function ProfileSetupPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-white dark:text-black dark:hover:bg-gray-100"
+            className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-zinc-100 dark:text-black dark:hover:bg-gray-100"
           >
             {isLoading ? 'Хадгалж байна...' : 'Үргэлжлүүлэх'}
           </button>

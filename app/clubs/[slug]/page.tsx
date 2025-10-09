@@ -1,3 +1,4 @@
+// app/clubs/[slug]/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -74,12 +75,12 @@ export default function ClubDetailPage() {
   if (!club || club.error) {
     return (
       <div className="max-w-5xl mx-auto px-4 py-12 text-center">
-        <h1 className="text-2xl font-bold text-foreground dark:text-white mb-2">
+        <h1 className="text-2xl font-bold text-foreground dark:text-zinc-100 mb-2">
           Клуб олдсонгүй
         </h1>
         <Link
           href="/clubs"
-          className="text-primary hover:text-primary/80 transition-colors duration-200 no-underline hover:underline underline-offset-4 dark:text-white dark:hover:text-gray-300"
+          className="text-primary hover:text-primary/80 transition-colors duration-200 no-underline hover:underline underline-offset-4 dark:text-zinc-100 dark:hover:text-gray-300"
         >
           Клубууд руу буцах
         </Link>
@@ -107,7 +108,7 @@ export default function ClubDetailPage() {
             disabled={!club.allowJoinRequests}
             className="absolute right-4 bottom-4 px-4 py-2 
                       bg-gray-100 text-gray-900 
-                      dark:bg-white dark:text-gray-900 
+                      dark:bg-zinc-100 dark:text-gray-900 
                       rounded-md font-medium border border-gray-300 dark:border-gray-900 
                       hover:bg-gray-200 dark:hover:bg-gray-50 text-base"
           >
@@ -129,7 +130,7 @@ export default function ClubDetailPage() {
             />
           </div>
         ) : (
-          <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-bold text-2xl border border-border dark:bg-white dark:text-black dark:border-white">
+          <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-bold text-2xl border border-border dark:bg-zinc-100 dark:text-black dark:border-white">
             {club.title.charAt(0)}
           </div>
         )}
@@ -137,7 +138,7 @@ export default function ClubDetailPage() {
           <div className="flex-1">
             <div className="flex items-start justify-between">
               <div>
-                <h1 className="text-xl font-bold text-foreground dark:text-white mb-2">
+                <h1 className="text-xl font-bold text-foreground dark:text-zinc-100 mb-2">
                   {club.title}
                 </h1>
                 <p className="text-muted-foreground dark:text-gray-300 mb-3">
@@ -185,8 +186,8 @@ export default function ClubDetailPage() {
               onClick={() => setActiveTab("posts")}
               className={`py-2 px-3 font-medium transition-colors duration-200 rounded-md outline-none border-none ${
                 activeTab === "posts"
-                  ? "bg-black text-white dark:bg-white dark:text-black"
-                  : "text-black dark:text-white hover:text-foreground dark:bg-zinc-700"
+                  ? "bg-black text-zinc-100 dark:bg-zinc-100 dark:text-black"
+                  : "text-black dark:text-zinc-100 hover:text-foreground dark:bg-zinc-700"
               }`}
             >
               Нийтлэлүүд
@@ -195,8 +196,8 @@ export default function ClubDetailPage() {
               onClick={() => setActiveTab("members")}
               className={`py-2 px-3 font-medium transition-colors duration-200 rounded-md outline-none border-none ${
                 activeTab === "members"
-                  ? "bg-black text-white dark:bg-white dark:text-black"
-                  : "text-black dark:text-white hover:text-foreground dark:bg-zinc-700"
+                  ? "bg-black text-zinc-100 dark:bg-zinc-100 dark:text-black"
+                  : "text-black dark:text-zinc-100 hover:text-foreground dark:bg-zinc-700"
               }`}
             >
               Гишүүд
@@ -205,8 +206,8 @@ export default function ClubDetailPage() {
               onClick={() => setActiveTab("about")}
               className={`py-2 px-3 font-medium transition-colors duration-200 rounded-md outline-none border-none ${
                 activeTab === "about"
-                  ? "bg-black text-white dark:bg-white dark:text-black"
-                  : "text-black dark:text-white hover:text-foreground dark:bg-zinc-700"
+                  ? "bg-black text-zinc-100 dark:bg-zinc-100 dark:text-black"
+                  : "text-black dark:text-zinc-100 hover:text-foreground dark:bg-zinc-700"
               }`}
             >
               Тухай
@@ -252,8 +253,8 @@ export default function ClubDetailPage() {
       {/* Tab Content */}
       {activeTab === "posts" && (
         <div className="space-y-6">
-          {isMember && <PostForm clubId={club.id} onPostCreated={fetchClub} />}
-
+          {isMember && <>
+          <PostForm clubId={club.id} onPostCreated={fetchClub} />
           {club.posts?.length === 0 ? (
             <div className="bg-card border border-border rounded-lg p-12 text-center dark:bg-zinc-900 dark:border-zinc-800 mt-4">
               <p className="text-muted-foreground dark:text-gray-300">
@@ -265,12 +266,13 @@ export default function ClubDetailPage() {
               <PostCard key={post.id} post={post} clubSlug={club.slug} />
             ))
           )}
+          </>}
         </div>
       )}
 
       {activeTab === "members" && (
         <div className="bg-card border border-border rounded-lg p-6 dark:bg-zinc-900 dark:border-zinc-800">
-          <h2 className="text-xl font-bold text-foreground dark:text-white mb-4">
+          <h2 className="text-xl font-bold text-foreground dark:text-zinc-100 mb-4">
             Гишүүд ({club.members?.length || 0})
           </h2>
           <div className="space-y-3">
@@ -303,7 +305,7 @@ export default function ClubDetailPage() {
                   </p>
                 </div>
                 {member.isAdmin && (
-                  <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-medium rounded-full border border-primary/20 dark:bg-white/10 dark:text-white dark:border-white/20">
+                  <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-medium rounded-full border border-primary/20 dark:bg-zinc-100/10 dark:text-zinc-100 dark:border-white/20">
                     Админ
                   </span>
                 )}
@@ -315,7 +317,7 @@ export default function ClubDetailPage() {
 
       {activeTab === "about" && (
         <div className="bg-card border border-border rounded-lg p-6 dark:bg-zinc-900 dark:border-zinc-800">
-          <h2 className="text-xl font-bold text-foreground dark:text-white mb-4">
+          <h2 className="text-xl font-bold text-foreground dark:text-zinc-100 mb-4">
             Тайлбар
           </h2>
           <p className="text-foreground dark:text-gray-200 whitespace-pre-line">

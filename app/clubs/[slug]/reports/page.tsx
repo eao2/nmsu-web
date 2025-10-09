@@ -1,3 +1,4 @@
+// app/clubs/[slug]/reports/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -145,14 +146,14 @@ export default function ReportsPage() {
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-white">Тайлангууд</h1>
+          <h1 className="text-xl font-bold tracking-tight text-foreground dark:text-zinc-100">Тайлангууд</h1>
           <p className="text-muted-foreground dark:text-gray-400 mt-1">{club.title}</p>
         </div>
         {(session?.user?.role === 'CLUB_ADMIN' ||
           session?.user?.role === 'UNIVERSAL_ADMIN') && (
           <button
             onClick={() => setShowForm(!showForm)}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 dark:bg-white dark:text-black dark:hover:bg-gray-100"
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 dark:bg-zinc-100 dark:text-black dark:hover:bg-gray-100"
           >
             {showForm ? 'Хаах' : '+ Тайлан нэмэх'}
           </button>
@@ -164,7 +165,7 @@ export default function ReportsPage() {
           onSubmit={handleSubmit}
           className="bg-card border border-border rounded-xl p-6 mb-6 dark:bg-zinc-900 dark:border-zinc-800"
         >
-          <h2 className="text-xl font-bold text-foreground dark:text-white mb-4">Шинэ тайлан нэмэх</h2>
+          <h2 className="text-xl font-bold text-foreground dark:text-zinc-100 mb-4">Шинэ тайлан нэмэх</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
@@ -176,7 +177,7 @@ export default function ReportsPage() {
                 required
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:placeholder:text-zinc-500"
+                className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder:text-zinc-500"
                 placeholder="2024 оны намрын улирлын тайлан"
               />
             </div>
@@ -189,7 +190,7 @@ export default function ReportsPage() {
                 required
                 value={formData.semester}
                 onChange={(e) => setFormData({ ...formData, semester: e.target.value })}
-                className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
+                className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100"
               >
                 <option value="">Сонгох...</option>
                 <option value="Хавар">Хавар</option>
@@ -207,7 +208,7 @@ export default function ReportsPage() {
                 required
                 value={formData.year}
                 onChange={(e) => setFormData({ ...formData, year: parseInt(e.target.value) })}
-                className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
+                className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100"
                 min={2020}
                 max={2100}
               />
@@ -222,7 +223,7 @@ export default function ReportsPage() {
                 required
                 accept=".pdf,.doc,.docx,.xls,.xlsx"
                 onChange={(e) => setFile(e.target.files?.[0] || null)}
-                className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-muted file:text-foreground hover:file:bg-muted/80 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:file:bg-zinc-700 dark:file:text-gray-200 dark:hover:file:bg-zinc-600"
+                className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-muted file:text-foreground hover:file:bg-muted/80 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:file:bg-zinc-700 dark:file:text-gray-200 dark:hover:file:bg-zinc-600"
               />
             </div>
           </div>
@@ -231,14 +232,14 @@ export default function ReportsPage() {
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className="flex-1 px-6 py-3 border border-border bg-background text-foreground rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-700"
+              className="flex-1 px-6 py-3 border border-border bg-background text-foreground rounded-lg hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:hover:bg-zinc-700"
             >
               Цуцлах
             </button>
             <button
               type="submit"
               disabled={isUploading}
-              className="flex-1 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-white dark:text-black dark:hover:bg-gray-100"
+              className="flex-1 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-zinc-100 dark:text-black dark:hover:bg-gray-100"
             >
               {isUploading ? 'Хадгалж байна...' : 'Хадгалах'}
             </button>
@@ -253,9 +254,9 @@ export default function ReportsPage() {
             className="bg-card border border-border rounded-xl p-6 hover:bg-muted/50 transition-colors duration-200 dark:bg-zinc-900 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
           >
             <div className="flex items-start gap-4 mb-4">
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 dark:bg-white/10">
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 dark:bg-zinc-100/10">
                 <svg
-                  className="w-6 h-6 text-primary dark:text-white"
+                  className="w-6 h-6 text-primary dark:text-zinc-100"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -269,7 +270,7 @@ export default function ReportsPage() {
                 </svg>
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-foreground dark:text-white mb-1 truncate">
+                <h3 className="font-semibold text-foreground dark:text-zinc-100 mb-1 truncate">
                   {report.title}
                 </h3>
                 <p className="text-sm text-muted-foreground dark:text-gray-400">
@@ -284,7 +285,7 @@ export default function ReportsPage() {
             <div className="flex gap-2 mt-4">
               <button
                 onClick={() => handleDownload(report.filePath, report.title)}
-                className="flex-1 px-3 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 text-sm dark:bg-white dark:text-black dark:hover:bg-gray-100"
+                className="flex-1 px-3 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 text-sm dark:bg-zinc-100 dark:text-black dark:hover:bg-gray-100"
               >
                 Татах
               </button>
@@ -293,7 +294,7 @@ export default function ReportsPage() {
                 session?.user?.role === 'UNIVERSAL_ADMIN') && (
                 <button
                   onClick={() => handleDelete(report.id)}
-                  className="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 text-sm"
+                  className="px-3 py-2 bg-red-600 text-zinc-100 rounded-lg hover:bg-red-700 transition-colors duration-200 text-sm"
                 >
                   Устгах
                 </button>
