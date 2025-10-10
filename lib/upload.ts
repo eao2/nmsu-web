@@ -1,8 +1,6 @@
-// lib/upload.ts
-// lib/upload.ts
 import { NextRequest } from 'next/server';
 import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
+import { join, extname } from 'path';
 import { existsSync } from 'fs';
 
 export async function handleFileUpload(
@@ -14,31 +12,38 @@ export async function handleFileUpload(
     const file = formData.get('file') as File;
 
     if (!file) {
-      return { error: 'Файл олдсонгүй' };
+      return { error: 'Файл илгээгдсэнгүй' };
     }
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+
+    const originalName = file.name.toLowerCase().replace(/\s+/g, '_');
+    const safeName = originalName.replace(/[^a-z0-9._-]/g, '');
+    const ext = extname(safeName) || '';
+    const filename = `${Date.now()}-${safeName.replace(ext, '')}${ext}`;
 
     const uploadDir = join(process.cwd(), 'public', 'uploads', folder);
     if (!existsSync(uploadDir)) {
       await mkdir(uploadDir, { recursive: true });
     }
 
-    const filename = `${Date.now()}-${file.name}`;
-    const filepath = join(uploadDir, filename);
+    const filePath = join(uploadDir, filename);
+    await writeFile(filePath, buffer);
 
-    await writeFile(filepath, buffer);
+    const publicPath = `/uploads/${folder}/${filename}`;
 
     return {
       success: true,
-      path: `/uploads/${folder}/${filename}`,
+      path: publicPath,
       filename,
-      fileType: file.type,
+      fileType: file.type || 'application/octet-stream',
       fileSize: file.size,
+      folder,
+      uploadedAt: new Date().toISOString(),
     };
   } catch (error) {
     console.error('File upload error:', error);
-    return { error: 'Файл хуулахад алдаа гарлаа' };
+    return { error: 'Файл хуулах явцад алдаа гарлаа' };
   }
 }
