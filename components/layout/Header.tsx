@@ -55,7 +55,7 @@ export default function Header() {
               >
                 {session.user.image ? (
                   <Image
-                    src={session.user.image}
+                    src={process.env.NEXT_PUBLIC_GET_FILE_URL + session.user.image}
                     alt={session.user.name || ""}
                     width={32}
                     height={32}

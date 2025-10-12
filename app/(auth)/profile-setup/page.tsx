@@ -16,6 +16,8 @@ export default function ProfileSetupPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
+  
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
 
   const [formData, setFormData] = useState({
     phone: '',
@@ -87,7 +89,7 @@ export default function ProfileSetupPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/user/profile', {
+      const response = await fetch(`${apiUrl}/api/user/profile`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

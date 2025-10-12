@@ -21,6 +21,8 @@ export default function ClubDetailPage() {
   const [isMember, setIsMember] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
+
   useEffect(() => {
     // console.log("sesuserid", session?.user?.id)
     fetchClub();
@@ -28,7 +30,7 @@ export default function ClubDetailPage() {
 
   const fetchClub = async () => {
     try {
-      const response = await fetch(`/api/clubs?slug=${params.slug}`);
+      const response = await fetch(`${apiUrl}/api/clubs?slug=${params.slug}`);
       // const response = await fetch(`/api/clubs/${params.slug}`);
       const clubData = await response.json();
 
@@ -93,7 +95,7 @@ export default function ClubDetailPage() {
       <div className="relative w-full h-64 rounded-lg mb-4">
         {club.coverImage ? (
           <Image
-            src={club.coverImage}
+            src={process.env.NEXT_PUBLIC_GET_FILE_URL + club.coverImage}
             alt={club.title}
             fill
             className="w-full h-full object-cover rounded-lg border border-border dark:border-zinc-800"
@@ -123,7 +125,7 @@ export default function ClubDetailPage() {
         {club.profileImage ? (
           <div className="relative w-20 h-20 rounded-full border border-border dark:border-zinc-800 overflow-hidden">
             <Image
-              src={club.profileImage}
+              src={process.env.NEXT_PUBLIC_GET_FILE_URL + club.profileImage}
               alt={club.title}
               fill
               className="object-cover"
@@ -284,7 +286,7 @@ export default function ClubDetailPage() {
                 {member.user.image ? (
                   <div className="relative w-12 h-12 rounded-full object-cover border border-border dark:border-zinc-800">
                     <Image
-                      src={member.user.image}
+                      src={process.env.NEXT_PUBLIC_GET_FILE_URL + member.user.image}
                       alt={member.user.name}
                       width={48}
                       height={48}
@@ -320,9 +322,80 @@ export default function ClubDetailPage() {
           <h2 className="text-xl font-bold text-foreground dark:text-zinc-100 mb-4">
             Тайлбар
           </h2>
-          <p className="text-foreground dark:text-gray-200 whitespace-pre-line">
+          <p className="text-foreground dark:text-gray-200 whitespace-pre-line mb-6">
             {club.description}
           </p>
+
+          {club.reason && (
+            <>
+              <h3 className="text-lg font-semibold text-foreground dark:text-zinc-100 mb-2 mt-6">
+                Клуб үүсгэх болсон шалтгаан
+              </h3>
+              <p className="text-foreground dark:text-gray-200 whitespace-pre-line">
+                {club.reason}
+              </p>
+            </>
+          )}
+
+          {club.schedules && club.schedules.length > 0 && (
+            <>
+              <h3 className="text-lg font-semibold text-foreground dark:text-zinc-100 mb-3 mt-6">
+                Хуваарь
+              </h3>
+              <div className="space-y-2">
+                {club.schedules
+                  .sort((a: any, b: any) => {
+                    const dayOrder = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+                    return dayOrder.indexOf(a.dayOfWeek) - dayOrder.indexOf(b.dayOfWeek);
+                  })
+                  .map((schedule: any) => {
+                    const dayLabels: Record<string, string> = {
+                      MONDAY: 'Даваа',
+                      TUESDAY: 'Мягмар',
+                      WEDNESDAY: 'Лхагва',
+                      THURSDAY: 'Пүрэв',
+                      FRIDAY: 'Баасан',
+                      SATURDAY: 'Бямба',
+                      SUNDAY: 'Ням',
+                    };
+                    
+                    return (
+                      <div
+                        key={schedule.id}
+                        className="flex items-center gap-4 p-3 bg-muted/50 rounded-lg border border-border dark:bg-zinc-800/50 dark:border-zinc-700"
+                      >
+                        <div className="flex items-center gap-2 text-sm text-foreground dark:text-zinc-100">
+                          <svg className="w-4 h-4 text-muted-foreground dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          <span className="font-medium">{dayLabels[schedule.dayOfWeek]}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-foreground dark:text-zinc-100">
+                          <svg className="w-4 h-4 text-muted-foreground dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span>{schedule.startTime} - {schedule.endTime}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-foreground dark:text-zinc-100">
+                          <svg className="w-4 h-4 text-muted-foreground dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                          </svg>
+                          <span>Өрөө {schedule.room}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+              {isAdmin && (
+                <Link
+                  href={`/clubs/${params.slug}/schedules`}
+                  className="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors no-underline"
+                >
+                  Хуваарь засах
+                </Link>
+              )}
+            </>
+          )}
 
           <div className="mt-6 pt-6 border-t border-border dark:border-zinc-800">
             <div className="grid grid-cols-2 gap-4 text-sm">
@@ -360,11 +433,11 @@ export default function ClubDetailPage() {
               </div>
             </div>
             {(isMember && !isAdmin) && (
-            <div>
-              <Link href={`/clubs/${params.slug}/leave`} className="bg-red-100 text-red-900 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-200 px-4 py-2 rounded-md font-medium mt-6 inline-block">
-                Клубээс гарах
-              </Link>
-            </div>
+              <div>
+                <Link href={`/clubs/${params.slug}/leave`} className="bg-red-100 text-red-900 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-200 px-4 py-2 rounded-md font-medium mt-6 inline-block no-underline">
+                  Клубээс гарах
+                </Link>
+              </div>
             )}
           </div>
         </div>

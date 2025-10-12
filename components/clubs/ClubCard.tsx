@@ -13,7 +13,7 @@ export default function ClubCard({ club, isMy }: ClubCardProps) {
         {club.coverImage ? (
           <div className="relative w-full h-48">
             <Image
-              src={club.coverImage}
+              src={process.env.NEXT_PUBLIC_GET_FILE_URL + club.coverImage}
               alt={club.title}
               fill
               className="object-cover border-b border-border dark:border-zinc-700"
@@ -28,7 +28,7 @@ export default function ClubCard({ club, isMy }: ClubCardProps) {
             <div className="relative w-12 h-12 flex-shrink-0">
               {club.profileImage ? (
                 <Image
-                  src={club.profileImage}
+                  src={process.env.NEXT_PUBLIC_GET_FILE_URL + club.profileImage}
                   alt={club.title}
                   fill
                   className="rounded-full object-cover border border-border dark:border-zinc-700"

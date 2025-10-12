@@ -14,19 +14,21 @@ export default function JoinRequestsPage() {
   const [filter, setFilter] = useState<'pending' | 'all'>('pending');
   const [selectedRequest, setSelectedRequest] = useState<any>(null);
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
+
   useEffect(() => {
     fetchClubAndRequests();
   }, [params.slug, filter]);
 
   const fetchClubAndRequests = async () => {
     try {
-      const response = await fetch(`/api/clubs?slug=${params.slug}`);
+      const response = await fetch(`${apiUrl}/api/clubs?slug=${params.slug}`);
       const clubData = await response.json();
 
       if (clubData) {
         setClub(clubData);
 
-        const requestsResponse = await fetch(`/api/clubs/${clubData.id}/join-requests`);
+        const requestsResponse = await fetch(`${apiUrl}/api/clubs/${clubData.id}/join-requests`);
         if (requestsResponse.ok) {
           const data = await requestsResponse.json();
           setRequests(
@@ -43,7 +45,7 @@ export default function JoinRequestsPage() {
 
   const handleAction = async (requestId: string, action: 'approve' | 'reject') => {
     try {
-      const response = await fetch(`/api/join-requests/${requestId}`, {
+      const response = await fetch(`${apiUrl}/api/join-requests/${requestId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action }),
@@ -117,7 +119,7 @@ export default function JoinRequestsPage() {
                 <div className="flex items-center gap-3">
                   {request.user.image ? (
                     <Image
-                      src={request.user.image}
+                      src={process.env.NEXT_PUBLIC_GET_FILE_URL + request.user.image}
                       alt={request.user.name}
                       width={48}
                       height={48}

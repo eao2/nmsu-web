@@ -1,5 +1,8 @@
 // lib/push-registration.ts
 export async function registerPushNotifications() {
+
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
+
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
     console.log('Push notifications not supported');
     return;
@@ -21,7 +24,7 @@ export async function registerPushNotifications() {
       ),
     });
 
-    await fetch('/api/notifications/subscribe', {
+    await fetch(`${apiUrl}/api/notifications/subscribe`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

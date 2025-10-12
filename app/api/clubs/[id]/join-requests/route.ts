@@ -138,15 +138,15 @@ export async function POST(
       },
     });
 
-    const filePathsToConfirm = Object.values(answers).reduce((acc: string[], answer: any) => {
-      if (typeof answer.value === 'string' && answer.value.startsWith('/uploads/')) {
+    const fileKeysToConfirm = Object.values(answers).reduce((acc: string[], answer: any) => {
+      if (typeof answer.value === 'string' && answer.value.startsWith('join-requests')) {
         acc.push(answer.value);
       }
       return acc;
     }, []);
 
-    if (filePathsToConfirm.length > 0) {
-      await confirmUploadedFiles(filePathsToConfirm);
+    if (fileKeysToConfirm.length > 0) {
+      await confirmUploadedFiles(fileKeysToConfirm);
     }
 
     // Notify all admins

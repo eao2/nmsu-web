@@ -19,19 +19,21 @@ export default function ReportsPage() {
   });
   const [file, setFile] = useState<File | null>(null);
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
+
   useEffect(() => {
     fetchClubAndReports();
   }, [params.slug]);
 
   const fetchClubAndReports = async () => {
     try {
-      const response = await fetch(`/api/clubs?slug=${params.slug}`);
+      const response = await fetch(`${apiUrl}/api/clubs?slug=${params.slug}`);
       const clubData = await response.json();
 
       if (clubData) {
         setClub(clubData);
 
-        const reportsResponse = await fetch(`/api/clubs/${clubData.id}/reports`);
+        const reportsResponse = await fetch(`${apiUrl}api/clubs/${clubData.id}/reports`);
         if (reportsResponse.ok) {
           const data = await reportsResponse.json();
           setReports(data);
@@ -56,7 +58,7 @@ export default function ReportsPage() {
       const uploadFormData = new FormData();
       uploadFormData.append('file', file);
 
-      const uploadResponse = await fetch('/api/upload?folder=reports', {
+      const uploadResponse = await fetch(`${apiUrl}/api/upload?folder=reports`, {
         method: 'POST',
         body: uploadFormData,
       });
@@ -65,15 +67,15 @@ export default function ReportsPage() {
         throw new Error('File upload failed');
       }
 
-      const { path } = await uploadResponse.json();
+      const { key } = await uploadResponse.json();
 
       // Create report
-      const response = await fetch(`/api/clubs/${club.id}/reports`, {
+      const response = await fetch(`${apiUrl}/api/clubs/${club.id}/reports`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          filePath: path,
+          fileKey: key,
         }),
       });
 
@@ -103,7 +105,7 @@ export default function ReportsPage() {
       return;
     }
     try {
-      const response = await fetch(`/api/clubs/${club.id}/reports`, {
+      const response = await fetch(`${apiUrl}/api/clubs/${club.id}/reports`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reportId }),
@@ -121,9 +123,9 @@ export default function ReportsPage() {
     }
   };
 
-  const handleDownload = (filePath: string, fileName: string) => {
+  const handleDownload = (fileKey: string, fileName: string) => {
     const link = document.createElement('a');
-    link.href = filePath;
+    link.href = process.env.NEXT_PUBLIC_GET_FILE_URL + fileKey;
     link.download = fileName;
     link.target = '_blank';
     document.body.appendChild(link);

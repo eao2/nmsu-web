@@ -14,6 +14,8 @@ export default function NotificationBell() {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [isMobile, setIsMobile] = useState(false);
   
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
+
   // State to manage the push notification permission prompt
   const [showPushPrompt, setShowPushPrompt] = useState(false);
 
@@ -65,7 +67,7 @@ export default function NotificationBell() {
 
   const fetchUnreadCount = async () => {
     try {
-      const response = await fetch("/api/notifications?unreadOnly=true");
+      const response = await fetch(`${apiUrl}/api/notifications?unreadOnly=true`);
       const data = await response.json();
       setUnreadCount(data.length);
     } catch (error) {
@@ -75,7 +77,7 @@ export default function NotificationBell() {
 
   const fetchNotifications = async () => {
     try {
-      const response = await fetch("/api/notifications");
+      const response = await fetch(`${apiUrl}/api/notifications`);
       const data = await response.json();
       setNotifications(data.slice(0, 5));
     } catch (error) {
@@ -85,7 +87,7 @@ export default function NotificationBell() {
 
   const markAsRead = async (ids: string[]) => {
     try {
-      await fetch("/api/notifications", {
+      await fetch(`${apiUrl}/api/notifications`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ notificationIds: ids, markAsRead: true }),

@@ -4,10 +4,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { confirmUploadedFiles } from '@/lib/confirmUploadedFiles';
-import { ca } from 'date-fns/locale';
-import { unlink } from 'fs/promises';
-import { join } from 'path';
-import { deleteFiles } from '@/lib/deleteFiles';
+import { deleteFilesByKey } from '@/lib/minio-uploads';
 
 export async function GET(
   request: NextRequest,
@@ -73,9 +70,9 @@ export async function POST(
     }
 
     const body = await request.json();
-    const { title, semester, year, filePath } = body;
+    const { title, semester, year, fileKey } = body;
 
-    if (!title || !semester || !year || !filePath) {
+    if (!title || !semester || !year || !fileKey) {
       return NextResponse.json(
         { error: 'Бүх талбар шаардлагатай' },
         { status: 400 }
@@ -88,11 +85,11 @@ export async function POST(
         title,
         semester,
         year: parseInt(year),
-        filePath,
+        fileKey,
       },
     });
 
-    confirmUploadedFiles([filePath]);
+    confirmUploadedFiles([fileKey]);
 
     return NextResponse.json(report, { status: 201 });
   } catch (error) {
@@ -143,8 +140,8 @@ export async function DELETE(
       where: { id: reportId, clubId: clubId },
     });
 
-    if(report.filePath){
-      deleteFiles([report.filePath]);
+    if(report.fileKey){
+      deleteFilesByKey([report.fileKey]);
     }
 
     return NextResponse.json({ success: true });

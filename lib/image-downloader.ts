@@ -1,23 +1,21 @@
 // lib/image-downloader.ts
+
 import fetch from "node-fetch";
 import sharp from "sharp";
-import { writeFile, mkdir, unlink, access } from "fs/promises";
-import { constants } from "fs";
-import { join, extname } from "path";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { s3Client } from "./s3-client";
 
 /**
- * Downloads and saves a user's profile image as a high-quality PNG.
- * Overwrites previous images to avoid duplicates and cleans up old extensions.
- * @param {string} url - The external image URL (e.g., Google profile picture).
- * @param {string} userId - The unique user ID (used for the filename).
- * @returns {Promise<string>} The new public path (e.g., /uploads/avatars/123.png).
+ * Downloads a user's profile image, processes it, and saves it to MinIO.
+ * @param {string} url - The external image URL.
+ * @param {string} userId - The unique user ID.
+ * @returns {Promise<string>} The MinIO key of the saved image (e.g., "uploads-avatars-123.png").
  */
 export async function downloadAndSaveProfileImage(
   url: string,
   userId: string
 ): Promise<string> {
   const highQualityUrl = url.replace(/=s\d+-c/, "=s800-c");
-
   const response = await fetch(highQualityUrl);
 
   if (!response.ok) {
@@ -26,39 +24,29 @@ export async function downloadAndSaveProfileImage(
     );
   }
 
-  const folder = "avatars";
-  const uploadDir = join(process.cwd(), "public", "uploads", folder);
-
-  await mkdir(uploadDir, { recursive: true });
-
-  const filename = `${userId}.png`;
-  const filepath = join(uploadDir, filename);
-
-  const possibleExtensions = [".jpg", ".jpeg", ".webp"];
-
-  const cleanupPromises = possibleExtensions.map(async (ext) => {
-    const oldPath = join(uploadDir, `${userId}${ext}`);
-
-    try {
-      await unlink(oldPath);
-    } catch (err) {
-      if (err instanceof Error && "code" in err && err.code === "ENOENT") {
-        return;
-      }
-
-      console.warn(`Cleanup warning for ${oldPath}:`, err);
-    }
-  });
-
-  await Promise.all(cleanupPromises);
-
   const buffer = Buffer.from(await response.arrayBuffer());
   const optimizedImage = await sharp(buffer)
     .resize(512, 512, { fit: "cover" })
     .png({ compressionLevel: 0 })
     .toBuffer();
 
-  await writeFile(filepath, optimizedImage);
+  const folder = "avatars";
+  const filename = `${userId}.png`;
+  const key = `${folder}-${filename}`;
 
-  return `/uploads/${folder}/${filename}`;
+  try {
+    await s3Client.send(
+      new PutObjectCommand({
+        Bucket: process.env.S3_BUCKET_NAME!,
+        Key: key,
+        Body: optimizedImage,
+        ContentType: "image/png",
+      })
+    );
+  } catch (error) {
+    console.error("Failed to upload processed image to MinIO:", error);
+    throw new Error("Could not save the processed profile image.");
+  }
+
+  return key;
 }

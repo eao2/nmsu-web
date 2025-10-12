@@ -25,19 +25,21 @@ export default function JoinFormBuilderPage() {
   const [fields, setFields] = useState<any[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
+
   useEffect(() => {
     fetchClubAndForm();
   }, [params.slug]);
 
   const fetchClubAndForm = async () => {
     try {
-      const response = await fetch(`/api/clubs?slug=${params.slug}`);
+      const response = await fetch(`${apiUrl}/api/clubs?slug=${params.slug}`);
       const clubData = await response.json();
 
       if (clubData) {
         setClub(clubData);
 
-        const formResponse = await fetch(`/api/clubs/${clubData.id}/join-form`);
+        const formResponse = await fetch(`${apiUrl}/api/clubs/${clubData.id}/join-form`);
         if (formResponse.ok) {
           const formData = await formResponse.json();
           setFields(formData.fields || []);
@@ -91,7 +93,7 @@ export default function JoinFormBuilderPage() {
     setIsSaving(true);
 
     try {
-      const response = await fetch(`/api/clubs/${club.id}/join-form`, {
+      const response = await fetch(`${apiUrl}/api/clubs/${club.id}/join-form`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ fields }),

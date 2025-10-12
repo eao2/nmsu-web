@@ -1,7 +1,7 @@
 // app/api/upload/cleanup/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { deleteFiles } from "@/lib/deleteFiles";
+import { deleteFilesByKey } from "@/lib/minio-uploads";
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,13 +14,13 @@ export async function POST(request: NextRequest) {
         },
       },
       select: {
-        filePath: true,
+        fileKey: true,
       },
     });
 
-    const filePathsToDelete = expiredFiles.map((file) => file.filePath);
+    const fileKeysToDelete = expiredFiles.map((file) => file.fileKey);
 
-    await deleteFiles(filePathsToDelete);
+    await deleteFilesByKey(fileKeysToDelete);
 
     const dbDeletionResult = await prisma.temporaryFile.deleteMany({
       where: {

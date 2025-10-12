@@ -13,6 +13,8 @@ export default function ClubsPage() {
   const [otherClubs, setOtherClubs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
+
   useEffect(() => {
     fetchClubs();
   }, [session]);
@@ -20,7 +22,7 @@ export default function ClubsPage() {
   const fetchClubs = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/clubs');
+      const response = await fetch(`${apiUrl}/api/clubs`);
       const data = await response.json();
       setMyClubs(data.myClubs || []);
       setOtherClubs(data.otherClubs || []);

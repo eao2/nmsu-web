@@ -11,35 +11,37 @@ interface PostFormProps {
 export default function PostForm({ clubId, onPostCreated }: PostFormProps) {
   const [content, setContent] = useState('');
   const [files, setFiles] = useState<File[]>([]);
-  const [uploadedPaths, setUploadedPaths] = useState<string[]>([]);
+  const [uploadedKeys, setUploadedKeys] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
     if (selectedFiles.length === 0) return;
 
     setIsUploading(true);
-    const newPaths: string[] = [];
+    const newKeys: string[] = [];
 
     try {
       for (const file of selectedFiles) {
         const formData = new FormData();
         formData.append('file', file);
 
-        const uploadResponse = await fetch('/api/upload?folder=posts', {
+        const uploadResponse = await fetch(`${apiUrl}/api/upload?folder=posts`, {
           method: 'POST',
           body: formData,
         });
 
         if (uploadResponse.ok) {
-          const { path } = await uploadResponse.json();
-          newPaths.push(path);
+          const { key } = await uploadResponse.json();
+          newKeys.push(key);
         }
       }
 
       setFiles([...files, ...selectedFiles]);
-      setUploadedPaths([...uploadedPaths, ...newPaths]);
+      setUploadedKeys([...uploadedKeys, ...newKeys]);
     } catch (error) {
       console.error('Upload error:', error);
       alert('Файл хуулахад алдаа гарлаа');
@@ -50,7 +52,7 @@ export default function PostForm({ clubId, onPostCreated }: PostFormProps) {
 
   const handleRemoveFile = (index: number) => {
     setFiles(files.filter((_, i) => i !== index));
-    setUploadedPaths(uploadedPaths.filter((_, i) => i !== index));
+    setUploadedKeys(uploadedKeys.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,26 +62,19 @@ export default function PostForm({ clubId, onPostCreated }: PostFormProps) {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`/api/clubs/${clubId}/posts`, {
+      const response = await fetch(`${apiUrl}/api/clubs/${clubId}/posts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           content, 
-          attachments: uploadedPaths 
+          attachments: uploadedKeys 
         }),
       });
 
       if (response.ok) {
-        // Confirm files are used
-        await fetch('/api/upload/confirm', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ filePaths: uploadedPaths }),
-        });
-
         setContent('');
         setFiles([]);
-        setUploadedPaths([]);
+        setUploadedKeys([]);
         onPostCreated();
       }
     } catch (error) {
@@ -95,7 +90,7 @@ export default function PostForm({ clubId, onPostCreated }: PostFormProps) {
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        placeholder="Юу бодож байна..."
+        placeholder="..."
         rows={3}
         className="w-full px-4 py-3 border border-border rounded-lg bg-background text-foreground focus-visible:ring-2 focus-visible:ring-primary focus:border-transparent resize-none transition-colors duration-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder:text-zinc-500"
       />
@@ -111,9 +106,11 @@ export default function PostForm({ clubId, onPostCreated }: PostFormProps) {
               <button
                 type="button"
                 onClick={() => handleRemoveFile(index)}
-                className="text-red-600 hover:text-red-700 transition-colors duration-200"
+                className="text-red-600 hover:text-red-700 transition-colors duration-200 rounded-full p-1 flex items-center justify-center"
               >
-                ×
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x fill-red-600" viewBox="0 0 16 16">
+                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                </svg>
               </button>
             </div>
           ))}

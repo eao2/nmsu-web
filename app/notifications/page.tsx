@@ -13,6 +13,8 @@ export default function NotificationsPage() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
+
   useEffect(() => {
     fetchNotifications();
     fetchUnreadCount();
@@ -34,7 +36,7 @@ export default function NotificationsPage() {
   const fetchNotifications = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/notifications");
+      const response = await fetch(`${apiUrl}/api/notifications`);
       const data = await response.json();
       setNotifications(data);
     } catch (error) {
@@ -46,7 +48,7 @@ export default function NotificationsPage() {
 
   const fetchUnreadCount = async () => {
     try {
-      const response = await fetch("/api/notifications?unreadOnly=true");
+      const response = await fetch(`${apiUrl}/api/notifications?unreadOnly=true`);
       const data = await response.json();
       setUnreadCount(data.length);
     } catch (error) {
@@ -56,7 +58,7 @@ export default function NotificationsPage() {
 
   const markAsRead = async (ids: string[]) => {
     try {
-      await fetch("/api/notifications", {
+      await fetch(`${apiUrl}/api/notifications`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ notificationIds: ids, markAsRead: true }),

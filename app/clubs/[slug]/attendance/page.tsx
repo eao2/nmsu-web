@@ -71,6 +71,8 @@ export default function AttendancePage() {
   const [isLoadingMember, setIsLoadingMember] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
+
   useEffect(() => {
     fetchClubAndMembers();
   }, [params.slug]);
@@ -110,7 +112,7 @@ export default function AttendancePage() {
     setError(null);
 
     try {
-      const clubResponse = await fetch(`/api/clubs?slug=${params.slug}`);
+      const clubResponse = await fetch(`${apiUrl}/api/clubs?slug=${params.slug}`);
 
       if (!clubResponse.ok) {
         throw new Error("Failed to fetch club data");
@@ -139,7 +141,7 @@ export default function AttendancePage() {
     setError(null);
 
     try {
-      const response = await fetch(`/api/clubs/${club.id}/attendance/dates`);
+      const response = await fetch(`${apiUrl}/api/clubs/${club.id}/attendance/dates`);
 
       if (!response.ok) {
         throw new Error("Failed to fetch attendance dates");
@@ -163,7 +165,7 @@ export default function AttendancePage() {
 
     try {
       const response = await fetch(
-        `/api/clubs/${club.id}/attendance?date=${selectedDate}`
+        `${apiUrl}/api/clubs/${club.id}/attendance?date=${selectedDate}`
       );
 
       if (!response.ok) {
@@ -208,7 +210,7 @@ export default function AttendancePage() {
 
     try {
       const response = await fetch(
-        `/api/clubs/${club.id}/attendance?startDate=${dateRange.start}&endDate=${dateRange.end}`
+        `${apiUrl}/api/clubs/${club.id}/attendance?startDate=${dateRange.start}&endDate=${dateRange.end}`
       );
 
       if (!response.ok) {
@@ -295,7 +297,7 @@ export default function AttendancePage() {
     setError(null);
 
     try {
-      const response = await fetch(`/api/clubs/${club.id}/attendance`, {
+      const response = await fetch(`${apiUrl}/api/clubs/${club.id}/attendance`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -326,7 +328,7 @@ export default function AttendancePage() {
 
     try {
       const response = await fetch(
-        `/api/clubs/${club.id}/attendance/${sessionId}`,
+        `${apiUrl}/api/clubs/${club.id}/attendance/${sessionId}`,
         {
           method: "DELETE",
         }
@@ -762,7 +764,7 @@ export default function AttendancePage() {
                             <div className="flex items-center gap-2">
                               {member.user.image ? (
                                 <Image
-                                  src={member.user.image}
+                                  src={process.env.NEXT_PUBLIC_GET_FILE_URL + member.user.image}
                                   alt={member.user.name}
                                   width={40}
                                   height={40}
@@ -927,7 +929,7 @@ export default function AttendancePage() {
                                   <div className="flex items-center gap-2">
                                     {att.user.image ? (
                                       <Image
-                                        src={att.user.image}
+                                        src={process.env.NEXT_PUBLIC_GET_FILE_URL + att.user.image}
                                         alt={att.user.name}
                                         width={32}
                                         height={32}

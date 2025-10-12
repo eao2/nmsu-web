@@ -84,6 +84,8 @@ export async function POST(
       },
     });
 
+
+    
     // Notify post author
     if (comment.post.authorId !== session.user.id) {
       await createNotification({

@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { confirmUploadedFiles } from '@/lib/confirmUploadedFiles';
-import { deleteFiles } from '@/lib/deleteFiles';
+import { deleteFilesByKey } from '@/lib/minio-uploads';
 
 export async function GET(
   request: NextRequest,
@@ -131,11 +131,11 @@ export async function PATCH(
 
     prevClub?.profileImage &&
       prevClub.profileImage !== profileImage &&
-      (await deleteFiles([prevClub.profileImage]));
+      (await deleteFilesByKey([prevClub.profileImage]));
 
     prevClub?.coverImage &&
       prevClub.coverImage !== coverImage &&
-      (await deleteFiles([prevClub.coverImage]));
+      (await deleteFilesByKey([prevClub.coverImage]));
 
     const club = await prisma.club.update({
       where: { id: clubId },

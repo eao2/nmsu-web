@@ -15,19 +15,21 @@ export default function JoinClubPage() {
   const [joinForm, setJoinForm] = useState<any>(null);
   const [answers, setAnswers] = useState<{ [key: string]: any }>({});
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
+
   useEffect(() => {
     fetchClubAndForm();
   }, [params.slug]);
 
   const fetchClubAndForm = async () => {
     try {
-      const response = await fetch(`/api/clubs?slug=${params.slug}`);
+      const response = await fetch(`${apiUrl}/api/clubs?slug=${params.slug}`);
       const clubData = await response.json();
 
       if (clubData) {
         setClub(clubData);
 
-        const formResponse = await fetch(`/api/clubs/${clubData.id}/join-form`);
+        const formResponse = await fetch(`${apiUrl}/api/clubs/${clubData.id}/join-form`);
         if (formResponse.ok) {
           const formData = await formResponse.json();
           setJoinForm(formData);
@@ -44,14 +46,14 @@ export default function JoinClubPage() {
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await fetch('/api/upload?folder=join-requests', {
+    const response = await fetch(`${apiUrl}/api/upload?folder=join-requests`, {
       method: 'POST',
       body: formData,
     });
 
     if (response.ok) {
-      const { path } = await response.json();
-      setAnswers({ ...answers, [fieldId]: path });
+      const { key } = await response.json();
+      setAnswers({ ...answers, [fieldId]: key });
     }
   };
 
@@ -72,7 +74,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       }
     });
 
-    const response = await fetch(`/api/clubs/${club.id}/join-requests`, {
+    const response = await fetch(`${apiUrl}/api/clubs/${club.id}/join-requests`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ answers: transformedAnswers }),

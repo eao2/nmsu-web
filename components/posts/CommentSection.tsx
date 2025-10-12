@@ -15,13 +15,15 @@ export default function CommentSection({ postId }: CommentSectionProps) {
   const [newComment, setNewComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
+
   useEffect(() => {
     fetchComments();
   }, [postId]);
 
   const fetchComments = async () => {
     try {
-      const response = await fetch(`/api/posts/${postId}/comments`);
+      const response = await fetch(`${apiUrl}/api/posts/${postId}/comments`);
       const data = await response.json();
       setComments(data);
     } catch (error) {
@@ -36,7 +38,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`/api/posts/${postId}/comments`, {
+      const response = await fetch(`${apiUrl}/api/posts/${postId}/comments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: newComment }),
@@ -60,7 +62,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
           {session?.user?.image ? (
             <div className="relative w-9 h-9 rounded-full">
               <Image
-                src={session.user.image}
+                src={process.env.NEXT_PUBLIC_GET_FILE_URL + session.user.image}
                 alt={session.user.name || ""}
                 fill
                 className="w-9 h-9 rounded-full object-cover border border-border dark:border-zinc-700"
@@ -97,7 +99,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
           <div key={comment.id} className="flex gap-3">
             {comment.author.image ? (
               <Image
-                src={comment.author.image}
+                src={process.env.NEXT_PUBLIC_GET_FILE_URL + comment.author.image}
                 alt={comment.author.name}
                 width={36}
                 height={36}

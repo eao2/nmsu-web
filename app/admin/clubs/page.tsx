@@ -11,6 +11,8 @@ export default function AdminClubsPage() {
   const [clubs, setClubs] = useState<any[]>([]);
   const [filter, setFilter] = useState<'pending' | 'all'>('pending');
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
+
   useEffect(() => {
     fetchClubs();
   }, [filter]);
@@ -21,7 +23,7 @@ export default function AdminClubsPage() {
 
   const fetchClubs = async () => {
     try {
-      const response = await fetch('/api/admin/clubs');
+      const response = await fetch(`${apiUrl}/api/admin/clubs`);
       const data = await response.json();
       
       if (filter === 'pending') {
@@ -36,7 +38,7 @@ export default function AdminClubsPage() {
 
   const handleApprove = async (clubId: string) => {
     try {
-      const response = await fetch(`/api/clubs/${clubId}/approve`, {
+      const response = await fetch(`${apiUrl}/api/clubs/${clubId}/approve`, {
         method: 'POST',
       });
 
@@ -50,7 +52,7 @@ export default function AdminClubsPage() {
 
   const toggleActive = async (clubId: string, isActive: boolean) => {
     try {
-      const response = await fetch(`/api/clubs/${clubId}`, {
+      const response = await fetch(`${apiUrl}/api/clubs/${clubId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isActive: !isActive }),
@@ -98,7 +100,7 @@ export default function AdminClubsPage() {
               <div className="flex items-start gap-4">
                 {club.profileImage ? (
                   <Image
-                    src={club.profileImage}
+                    src={process.env.NEXT_PUBLIC_GET_FILE_URL + club.profileImage}
                     alt={club.title}
                     width={64}
                     height={64}

@@ -12,6 +12,8 @@ export default function LeaveClubPage() {
   const [reason, setReason] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -23,7 +25,7 @@ export default function LeaveClubPage() {
 
     try {
       // First, get club ID
-      const clubResponse = await fetch(`/api/clubs?slug=${params.slug}`);
+      const clubResponse = await fetch(`${apiUrl}/api/clubs?slug=${params.slug}`);
       const club = await clubResponse.json();
 
       if (!club) {
@@ -31,7 +33,7 @@ export default function LeaveClubPage() {
         return;
       }
 
-      const response = await fetch(`/api/clubs/${club.id}/leave-requests`, {
+      const response = await fetch(`${apiUrl}/api/clubs/${club.id}/leave-requests`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reason: reason || null }),

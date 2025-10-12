@@ -25,6 +25,7 @@ type Club = {
   title: string;
   slug: string;
   description: string;
+  reason: string | null;
   profileImage: string | null;
   coverImage: string | null;
   isPublic: boolean;
@@ -99,6 +100,12 @@ export async function GET(request: NextRequest) {
                 createdAt: 'desc',
               },
               take: 10,
+            },
+            schedules: {
+              orderBy: [
+                { dayOfWeek: 'asc' },
+                { startTime: 'asc' },
+              ],
             },
             _count: {
               select: {
@@ -234,11 +241,26 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { title, description, profileImage, coverImage, isPublic } = body;
+    const { 
+      title, 
+      description, 
+      reason,
+      profileImage, 
+      coverImage, 
+      isPublic,
+      schedules = []
+    } = body;
 
     if (!title || !description) {
       return NextResponse.json(
         { error: 'Гарчиг болон тайлбар шаардлагатай' },
+        { status: 400 }
+      );
+    }
+
+    if (!reason) {
+      return NextResponse.json(
+        { error: 'Клуб үүсгэх шалтгаан шаардлагатай' },
         { status: 400 }
       );
     }
@@ -256,11 +278,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate schedules for conflicts
+    for (const schedule of schedules) {
+      const conflict = await prisma.clubSchedule.findFirst({
+        where: {
+          room: schedule.room,
+          dayOfWeek: schedule.dayOfWeek,
+          startTime: schedule.startTime,
+        },
+      });
+
+      if (conflict) {
+        return NextResponse.json(
+          { 
+            error: `Өрөө ${schedule.room}, ${schedule.dayOfWeek}, ${schedule.startTime} цагт аль хэдийн хуваарь байна` 
+          },
+          { status: 400 }
+        );
+      }
+    }
+
     const club = await prisma.club.create({
       data: {
         title,
         slug,
         description,
+        reason,
         profileImage,
         coverImage,
         isPublic: isPublic ?? true,
@@ -270,6 +313,14 @@ export async function POST(request: NextRequest) {
             userId: session.user.id,
             isAdmin: true,
           },
+        },
+        schedules: {
+          create: schedules.map((s: any) => ({
+            dayOfWeek: s.dayOfWeek,
+            startTime: s.startTime,
+            endTime: s.endTime,
+            room: s.room,
+          })),
         },
       },
       include: {
@@ -281,6 +332,7 @@ export async function POST(request: NextRequest) {
           },
         },
         members: true,
+        schedules: true,
       },
     });
     

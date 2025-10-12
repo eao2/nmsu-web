@@ -14,11 +14,11 @@ enum Role {
 }
 
 enum AttendanceStatus {
-  PRESENT       // ирсэн
-  LATE          // хоцорсон
-  SICK          // өвчтэй
-  EXCUSED       // чөлөө авсан
-  ABSENT        // тасалсан
+  PRESENT
+  LATE
+  SICK
+  EXCUSED
+  ABSENT
 }
 
 enum JoinRequestStatus {
@@ -45,6 +45,16 @@ enum NotificationType {
   ATTENDANCE_RECORDED
   ROLE_CHANGED
   CLUB_APPROVED
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
 }
 
 model Account {
@@ -124,6 +134,7 @@ model Club {
   title             String
   slug              String   @unique
   description       String   @db.Text
+  reason            String?  @db.Text  // NEW: Reason for creating club
   profileImage      String?
   coverImage        String?
   isPublic          Boolean  @default(true)
@@ -141,6 +152,7 @@ model Club {
   leaveRequests     LeaveRequest[]
   activitySessions  ActivitySession[]
   reports           Report[]
+  schedules         ClubSchedule[]  // NEW: Club schedules
   
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
@@ -148,6 +160,26 @@ model Club {
   @@index([creatorId])
   @@index([isActive])
   @@index([isConfirmed])
+}
+
+// NEW: Club Schedule Model
+model ClubSchedule {
+  id          String    @id @default(cuid())
+  clubId      String
+  club        Club      @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  
+  dayOfWeek   DayOfWeek
+  startTime   String    // Format: "HH:MM" (24-hour)
+  endTime     String    // Format: "HH:MM" (24-hour)
+  room        String    // Room number/name
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([room, dayOfWeek, startTime]) // Prevent room conflicts
+  @@index([clubId])
+  @@index([dayOfWeek])
+  @@index([room])
 }
 
 model ClubMember {
@@ -169,7 +201,7 @@ model ClubMember {
 model JoinForm {
   id        String   @id @default(cuid())
   clubId    String   @unique
-  fields    Json     // Array of field definitions
+  fields    Json
 
   club      Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
 
@@ -182,7 +214,7 @@ model JoinRequest {
   clubId    String
   userId    String
   status    JoinRequestStatus @default(PENDING)
-  answers   Json     // Submitted form answers
+  answers   Json
   
   club      Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -218,7 +250,7 @@ model Post {
   clubId      String
   authorId    String
   content     String   @db.Text
-  attachments Json?    // Array of file paths (any file type)
+  attachments Json?
   
   club        Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
   author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
@@ -253,7 +285,7 @@ model PostLike {
   id        String   @id @default(cuid())
   postId    String
   userId    String
-  isLike    Boolean  // true = like, false = dislike
+  isLike    Boolean
   
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -301,7 +333,7 @@ model ActivityAttendance {
 
 model TemporaryFile {
   id          String   @id @default(cuid())
-  filePath    String
+  fileKey     String
   fileName    String
   fileType    String
   fileSize    Int
@@ -320,7 +352,7 @@ model Report {
   title     String
   semester  String
   year      Int
-  filePath  String
+  fileKey  String
   
   club      Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
   

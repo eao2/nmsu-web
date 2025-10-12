@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { handleFileUpload } from '@/lib/upload';
+import { handleFileUpload } from '@/lib/minio-uploads';
 import { prisma } from '@/lib/prisma';
 
 export const config = {
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
 
     await prisma.temporaryFile.create({
       data: {
-        filePath: result.path!,
+        fileKey: result.key!,
         fileName: result.filename!,
         fileType: result.fileType!,
         fileSize: result.fileSize!,

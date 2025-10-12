@@ -10,13 +10,15 @@ import "swiper/css/pagination";
 export default function EventBanner() {
   const [events, setEvents] = useState<any[]>([]);
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
+
   useEffect(() => {
     fetchEvents();
   }, []);
 
   const fetchEvents = async () => {
     try {
-      const response = await fetch("/api/events");
+      const response = await fetch(`${apiUrl}/api/events`);
       const data = await response.json();
       setEvents(data);
     } catch (error) {
@@ -50,7 +52,7 @@ export default function EventBanner() {
             <div className="absolute inset-0">
               {event.image ? (
                 <Image
-                  src={event.image}
+                  src={process.env.NEXT_PUBLIC_GET_FILE_URL + event.image}
                   alt={event.title}
                   fill
                   className="object-cover"

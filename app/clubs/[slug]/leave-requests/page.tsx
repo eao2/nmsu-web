@@ -14,19 +14,21 @@ export default function LeaveRequestsPage() {
   const [filter, setFilter] = useState<'pending' | 'all'>('pending');
   const [selectedRequest, setSelectedRequest] = useState<any>(null);
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
+
   useEffect(() => {
     fetchClubAndRequests();
   }, [params.slug, filter]);
 
   const fetchClubAndRequests = async () => {
     try {
-      const clubResponse = await fetch(`/api/clubs?slug=${params.slug}`);
+      const clubResponse = await fetch(`${apiUrl}/api/clubs?slug=${params.slug}`);
       const clubData = await clubResponse.json();
 
       if (clubData) {
         setClub(clubData);
 
-        const requestsResponse = await fetch(`/api/clubs/${clubData.id}/leave-requests`);
+        const requestsResponse = await fetch(`${apiUrl}/api/clubs/${clubData.id}/leave-requests`);
         if (requestsResponse.ok) {
           const data = await requestsResponse.json();
           setRequests(
@@ -43,7 +45,7 @@ export default function LeaveRequestsPage() {
 
   const handleAction = async (requestId: string, action: 'approve' | 'reject') => {
     try {
-      const response = await fetch(`/api/leave-requests/${requestId}`, {
+      const response = await fetch(`${apiUrl}/api/leave-requests/${requestId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action }),
@@ -117,7 +119,7 @@ export default function LeaveRequestsPage() {
                 <div className="flex items-center gap-3">
                   {request.user.image ? (
                     <Image
-                      src={request.user.image}
+                      src={process.env.NEXT_PUBLIC_GET_FILE_URL + request.user.image}
                       alt={request.user.name}
                       width={48}
                       height={48}
@@ -190,7 +192,7 @@ export default function LeaveRequestsPage() {
                 <div className="flex items-center gap-3">
                   {selectedRequest.user.image ? (
                     <Image
-                      src={selectedRequest.user.image}
+                      src={process.env.NEXT_PUBLIC_GET_FILE_URL + selectedRequest.user.image}
                       alt={selectedRequest.user.name}
                       width={40}
                       height={40}
