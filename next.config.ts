@@ -20,6 +20,14 @@ const nextConfig = {
       },
     ],
   },
+  webpack: (config: any, { isServer } : any) => {
+    if (isServer) {
+      config.externals.push({
+        'socket.io-client': 'socket.io-client',
+      });
+    }
+    return config;
+  },
   async headers() {
     return [
       {

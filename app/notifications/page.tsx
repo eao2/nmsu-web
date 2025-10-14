@@ -1,44 +1,28 @@
 // app/notifications/page.tsx
+
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSocket } from "@/components/SocketProvider";
-import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 export default function NotificationsPage() {
-  const socket = useSocket();
   const router = useRouter();
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
-
-  useEffect(() => {
-    fetchNotifications();
-    fetchUnreadCount();
-
-    if (socket) {
-      socket.on("notification", (notification) => {
-        setUnreadCount((prev) => prev + 1);
-        setNotifications((prev) => [notification, ...prev]);
-      });
-    }
-
-    return () => {
-      if (socket) {
-        socket.off("notification");
-      }
-    };
-  }, [socket]);
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'; // Use port 3000
 
   const fetchNotifications = async () => {
     try {
-      setLoading(true);
+      if (notifications.length === 0) {
+        setLoading(true);
+      }
       const response = await fetch(`${apiUrl}/api/notifications`);
+      if (!response.ok) throw new Error('Failed to fetch notifications');
       const data = await response.json();
-      setNotifications(data);
+      setNotifications(data || []);
     } catch (error) {
       console.error("Fetch notifications error:", error);
     } finally {
@@ -49,29 +33,60 @@ export default function NotificationsPage() {
   const fetchUnreadCount = async () => {
     try {
       const response = await fetch(`${apiUrl}/api/notifications?unreadOnly=true`);
+      if (!response.ok) throw new Error('Failed to fetch unread count');
       const data = await response.json();
-      setUnreadCount(data.length);
+      setUnreadCount(data?.length || 0);
     } catch (error) {
       console.error("Fetch unread count error:", error);
     }
   };
 
+  const refreshData = () => {
+    fetchNotifications();
+    fetchUnreadCount();
+  };
+
+  useEffect(() => {
+    refreshData();
+
+    intervalRef.current = setInterval(() => {
+      console.log("Polling for new notifications...");
+      refreshData();
+    }, 30000);
+
+    const handleFocus = () => {
+      console.log("Window focused, refreshing notifications...");
+      refreshData();
+    };
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, []);
+
   const markAsRead = async (ids: string[]) => {
+    if (!ids || ids.length === 0) return;
+    
     try {
-      await fetch(`${apiUrl}/api/notifications`, {
+      const response = await fetch(`${apiUrl}/api/notifications`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ notificationIds: ids, markAsRead: true }),
       });
+      
+      if (!response.ok) throw new Error('Failed to mark notifications as read');
 
-      // Update local state
       setNotifications((prev) =>
         prev.map((notif) =>
           ids.includes(notif.id) ? { ...notif, isRead: true } : notif
         )
       );
 
-      setUnreadCount(Math.max(0, unreadCount - ids.length));
+      setUnreadCount((prev) => Math.max(0, prev - ids.length));
     } catch (error) {
       console.error("Mark as read error:", error);
     }
@@ -79,7 +94,6 @@ export default function NotificationsPage() {
 
   const markAllAsRead = async () => {
     const unreadIds = notifications.filter((n) => !n.isRead).map((n) => n.id);
-
     if (unreadIds.length > 0) {
       await markAsRead(unreadIds);
     }
@@ -109,7 +123,7 @@ export default function NotificationsPage() {
           </div>
         ) : notifications.length === 0 ? (
           <div className="bg-card dark:bg-zinc-900 rounded-xl p-8 text-center border border-zinc-300 dark:border-zinc-800">
-            <div className="w-16 h-16 mx-auto mb-4 bg-muted/50 dark:bg-zinc-800 rounded-full flex items-center justify-center">
+                        <div className="w-16 h-16 mx-auto mb-4 bg-muted/50 dark:bg-zinc-800 rounded-full flex items-center justify-center">
               <svg
                 className="w-8 h-8 text-muted-foreground dark:text-gray-500"
                 fill="none"

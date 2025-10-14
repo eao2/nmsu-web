@@ -22,13 +22,23 @@ export default function JoinRequestsPage() {
 
   const fetchClubAndRequests = async () => {
     try {
-      const response = await fetch(`${apiUrl}/api/clubs?slug=${params.slug}`);
+      const response = await fetch(`${apiUrl}/api/clubs?slug=${params.slug}`,{
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
       const clubData = await response.json();
 
       if (clubData) {
         setClub(clubData);
 
-        const requestsResponse = await fetch(`${apiUrl}/api/clubs/${clubData.id}/join-requests`);
+        const requestsResponse = await fetch(`${apiUrl}/api/clubs/${clubData.id}/join-requests`,{
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
         if (requestsResponse.ok) {
           const data = await requestsResponse.json();
           setRequests(
