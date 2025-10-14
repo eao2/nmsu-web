@@ -15,39 +15,29 @@ export const authOptions: NextAuthOptions = {
 
   cookies: {
     sessionToken: {
-      name: process.env.NODE_ENV === 'production' 
-        ? '__Secure-next-auth.session-token' 
-        : 'next-auth.session-token',
+      name: '__Secure-next-auth.session-token',
       options: {
         httpOnly: true,
-        sameSite: 'lax',
+        sameSite: 'none',
         path: '/',
-        secure: process.env.NODE_ENV === 'production',
-        domain: process.env.COOKIE_DOMAIN || undefined,
+        secure: true,
       },
     },
     callbackUrl: {
-      name: process.env.NODE_ENV === 'production'
-        ? '__Secure-next-auth.callback-url'
-        : 'next-auth.callback-url',
+      name: '__Secure-next-auth.callback-url',
       options: {
-        sameSite: 'lax',
+        sameSite: 'none',
         path: '/',
-        secure: process.env.NODE_ENV === 'production',
-        domain: process.env.COOKIE_DOMAIN || undefined,
+        secure: true,
       },
     },
     csrfToken: {
-      name: process.env.NODE_ENV === 'production'
-        ? '__Host-next-auth.csrf-token'
-        : 'next-auth.csrf-token',
+      name: '__Host-next-auth.csrf-token',
       options: {
         httpOnly: true,
-        sameSite: 'lax',
+        sameSite: 'none',
         path: '/',
-        secure: process.env.NODE_ENV === 'production',
-        // Note: __Host- prefix requires domain to be omitted
-        // So for CSRF token, don't set custom domain
+        secure: true,
       },
     },
   },
