@@ -20,13 +20,13 @@ const nextConfig = {
       },
     ],
   },
-  webpack: (config: any, { isServer } : any) => {
-    if (isServer) {
-      config.externals.push({
-        'socket.io-client': 'socket.io-client',
-      });
-    }
-    return config;
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://nmsu.ne-to.com/api/:path*', 
+      },
+    ];
   },
   async headers() {
     return [
