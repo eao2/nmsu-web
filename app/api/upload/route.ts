@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { handleFileUpload } from '@/lib/minio-uploads';
 import { prisma } from '@/lib/prisma';
+import { convertHeicToJpeg, isHeicFile } from '@/lib/heic-converter';
 
 export const config = {
   api: {
@@ -25,7 +26,44 @@ export async function POST(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const folder = searchParams.get('folder') || 'general';
 
-    const result = await handleFileUpload(request, folder);
+    let processedRequest = request;
+
+    const contentType = request.headers.get('content-type');
+    if (contentType && contentType.includes('multipart/form-data')) {
+      try {
+        const formData = await request.formData();
+        const file = formData.get('file') as File;
+        
+        if (file && isHeicFile(file.name, file.type)) {
+          const arrayBuffer = await file.arrayBuffer();
+          const buffer = Buffer.from(arrayBuffer);
+          const jpegBuffer = await convertHeicToJpeg(buffer);
+          
+          const jpegFile = new File([new Uint8Array(jpegBuffer)], file.name.replace(/\.heic$/i, '.jpg'), {
+            type: 'image/jpeg',
+          });
+          
+          const newFormData = new FormData();
+          for (const [key, value] of formData.entries()) {
+            if (key === 'file') {
+              newFormData.append(key, jpegFile);
+            } else {
+              newFormData.append(key, value);
+            }
+          }
+          
+          processedRequest = new NextRequest(request.url, {
+            method: 'POST',
+            headers: request.headers,
+            body: newFormData,
+          });
+        }
+      } catch (parseError) {
+        console.error('Error parsing form data for HEIC conversion:', parseError);
+      }
+    }
+
+    const result = await handleFileUpload(processedRequest, folder);
 
     if (result.error) {
       return NextResponse.json(

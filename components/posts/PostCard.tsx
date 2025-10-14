@@ -55,11 +55,7 @@ const VideoPlayer = ({ src }: { src: string }) => {
 export default function PostCard({ post, clubSlug }: PostCardProps) {
   const { data: session } = useSession();
   const [likes, setLikes] = useState(post._count?.likes || 0);
-  const [hasLiked, setHasLiked] = useState(
-    post.likes?.some(
-      (like: any) => like.userId === session?.user?.id && like.isLike
-    )
-  );
+  const [hasLiked, setHasLiked] = useState(post.hasLiked || false);
   const [showComments, setShowComments] = useState(false);
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
@@ -73,8 +69,9 @@ export default function PostCard({ post, clubSlug }: PostCardProps) {
       });
 
       if (response.ok) {
-        setHasLiked(!hasLiked);
-        setLikes(hasLiked ? likes - 1 : likes + 1);
+        const data = await response.json();
+        setHasLiked(data.hasLiked);
+        setLikes(data.likeCount);
       }
     } catch (error) {
       console.error("Like error:", error);

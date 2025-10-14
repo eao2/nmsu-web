@@ -6,7 +6,6 @@ import { prisma } from '@/lib/prisma';
 import { generateSlug } from '@/lib/utils';
 import { confirmUploadedFiles } from '@/lib/confirmUploadedFiles';
 
-// Define types for better type safety
 type ClubMember = {
   id: string;
   isAdmin: boolean;
@@ -44,6 +43,11 @@ type Club = {
     members: number;
     posts: number;
   };
+  userJoinRequest?: {
+    id: string;
+    status: string;
+    createdAt: Date;
+  };
 };
 
 export async function GET(request: NextRequest) {
@@ -54,66 +58,83 @@ export async function GET(request: NextRequest) {
 
     if (slug) {
       try {
-        const club = await prisma.club.findUnique({
-          where: { slug: slug },
-          include: {
-            creator: {
-              select: {
-                id: true,
-                name: true,
-                image: true,
-                email: true,
-              },
+        const userId = session?.user?.id;
+        
+        const includeOptions: any = {
+          creator: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+              email: true,
             },
-            members: {
-              include: {
-                user: {
-                  select: {
-                    id: true,
-                    name: true,
-                    image: true,
-                    email: true,
-                    phone: true,
-                    className: true,
-                    studentCode: true,
-                  },
+          },
+          members: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  image: true,
+                  email: true,
+                  phone: true,
+                  className: true,
+                  studentCode: true,
                 },
-              },
-            },
-            posts: {
-              include: {
-                author: {
-                  select: {
-                    id: true,
-                    name: true,
-                    image: true,
-                  },
-                },
-                _count: {
-                  select: {
-                    comments: true,
-                    likes: true,
-                  },
-                },
-              },
-              orderBy: {
-                createdAt: 'desc',
-              },
-              take: 10,
-            },
-            schedules: {
-              orderBy: [
-                { dayOfWeek: 'asc' },
-                { startTime: 'asc' },
-              ],
-            },
-            _count: {
-              select: {
-                members: true,
-                posts: true,
               },
             },
           },
+          posts: {
+            include: {
+              author: {
+                select: {
+                  id: true,
+                  name: true,
+                  image: true,
+                },
+              },
+              _count: {
+                select: {
+                  comments: true,
+                  likes: true,
+                },
+              },
+            },
+            orderBy: {
+              createdAt: 'desc',
+            },
+            take: 10,
+          },
+          schedules: {
+            orderBy: [
+              { dayOfWeek: 'asc' },
+              { startTime: 'asc' },
+            ],
+          },
+          _count: {
+            select: {
+              members: true,
+              posts: true,
+            },
+          },
+        };
+
+        if (userId) {
+          includeOptions.joinRequests = {
+            where: {
+              userId: userId,
+            },
+            select: {
+              id: true,
+              status: true,
+              createdAt: true,
+            },
+          };
+        }
+
+        const club = await prisma.club.findUnique({
+          where: { slug: slug },
+          include: includeOptions,
         });
 
         if (!club) {
@@ -123,7 +144,13 @@ export async function GET(request: NextRequest) {
           );
         }
 
-        return NextResponse.json(club);
+        const transformedClub: any = { ...club };
+        if (userId && club.joinRequests && club.joinRequests.length > 0) {
+          transformedClub.userJoinRequest = club.joinRequests[0];
+        }
+        delete transformedClub.joinRequests;
+
+        return NextResponse.json(transformedClub);
       } catch (error) {
         console.error('Get club error:', error);
         return NextResponse.json(
@@ -133,7 +160,6 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Get user's clubs
     let myClubs: Array<Club> = [];
     if (session?.user) {
       myClubs = await prisma.club.findMany({
@@ -278,7 +304,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate schedules for conflicts
     for (const schedule of schedules) {
       const conflict = await prisma.clubSchedule.findFirst({
         where: {

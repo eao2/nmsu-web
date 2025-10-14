@@ -24,14 +24,12 @@ export default function ClubDetailPage() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost';
 
   useEffect(() => {
-    // console.log("sesuserid", session?.user?.id)
     fetchClub();
   }, [session, params.slug]);
 
   const fetchClub = async () => {
     try {
       const response = await fetch(`${apiUrl}/api/clubs?slug=${params.slug}`);
-      // const response = await fetch(`/api/clubs/${params.slug}`);
       const clubData = await response.json();
 
       const userId = session?.user?.id;
@@ -40,10 +38,8 @@ export default function ClubDetailPage() {
         setClub(clubData);
 
         const member = clubData.members?.find(
-          (m: any) => m.userId === userId,
-          console.log("Session User ID:", userId)
+          (m: any) => m.userId === userId
         );
-        console.log("Member:", member);
         setIsMember(!!member);
         setIsAdmin(member?.isAdmin || false);
       }
@@ -90,6 +86,9 @@ export default function ClubDetailPage() {
     );
   }
 
+  // Check if user has a pending join request
+  const hasPendingRequest = club.userJoinRequest?.status === 'PENDING';
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       <div className="relative w-full h-64 rounded-lg mb-4">
@@ -107,14 +106,20 @@ export default function ClubDetailPage() {
         {isMember || (
           <button
             onClick={handleJoinRequest}
-            disabled={!club.allowJoinRequests}
+            disabled={!club.allowJoinRequests || hasPendingRequest}
             className="absolute right-4 bottom-4 px-4 py-2 
                       bg-gray-100 text-gray-900 
                       dark:bg-zinc-100 dark:text-gray-900 
                       rounded-md font-medium border border-gray-300 dark:border-gray-900 
-                      hover:bg-gray-200 dark:hover:bg-gray-50 text-base"
+                      hover:bg-gray-200 dark:hover:bg-gray-50 text-base
+                      disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {club.allowJoinRequests ? "Элсэх хүсэлт илгээх" : "Элсэлт хаалттай"}
+            {hasPendingRequest 
+              ? "Элсэх хүсэлт илгээсэн" 
+              : club.allowJoinRequests 
+                ? "Элсэх хүсэлт илгээх" 
+                : "Элсэлт хаалттай"
+            }
           </button>
         )}
       </div>
@@ -162,9 +167,6 @@ export default function ClubDetailPage() {
                               <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                             </svg>
                           </Link>
-                          {/* <span className="px-3 py-2 bg-green-500/10 text-green-700 dark:text-green-400 dark:bg-green-500/20 rounded-md font-medium border border-green-500/20 dark:border-green-500/30">
-                            Админ
-                          </span> */}
                         </>
                       ) : (
                         <span className="felx items-center justify-center px-4 py-2 bg-green-500/10 text-green-700 dark:text-green-400 dark:bg-green-500/20 rounded-md font-medium border border-green-500/20 dark:border-green-500/30">
@@ -326,17 +328,6 @@ export default function ClubDetailPage() {
             {club.description}
           </p>
 
-          {club.reason && (
-            <>
-              <h3 className="text-lg font-semibold text-foreground dark:text-zinc-100 mb-2 mt-6">
-                Клуб үүсгэх болсон шалтгаан
-              </h3>
-              <p className="text-foreground dark:text-gray-200 whitespace-pre-line">
-                {club.reason}
-              </p>
-            </>
-          )}
-
           {club.schedules && club.schedules.length > 0 && (
             <>
               <h3 className="text-lg font-semibold text-foreground dark:text-zinc-100 mb-3 mt-6">
@@ -396,6 +387,7 @@ export default function ClubDetailPage() {
               )}
             </>
           )}
+
 
           <div className="mt-6 pt-6 border-t border-border dark:border-zinc-800">
             <div className="grid grid-cols-2 gap-4 text-sm">

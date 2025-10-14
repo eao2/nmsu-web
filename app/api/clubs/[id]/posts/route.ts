@@ -15,6 +15,8 @@ export async function GET(
 ) {
   try {
     const { id: clubId } = await params;
+    const session = await getServerSession(authOptions);
+    
     const posts = await prisma.post.findMany({
       where: { clubId: clubId },
       include: {
@@ -39,7 +41,17 @@ export async function GET(
             createdAt: 'desc',
           },
         },
-        likes: true,
+        likes: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+              },
+            },
+          },
+        },
         _count: {
           select: {
             comments: true,
@@ -52,7 +64,12 @@ export async function GET(
       },
     });
 
-    return NextResponse.json(posts);
+    const postsWithLikeStatus = posts.map(post => ({
+      ...post,
+      hasLiked: session?.user ? post.likes.some(like => like.userId === session.user.id && like.isLike) : false,
+    }));
+
+    return NextResponse.json(postsWithLikeStatus);
   } catch (error) {
     console.error('Get posts error:', error);
     return NextResponse.json(
@@ -133,12 +150,33 @@ export async function POST(
             },
           },
         },
+        likes: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+              },
+            },
+          },
+        },
+        _count: {
+          select: {
+            comments: true,
+            likes: true,
+          },
+        },
       },
     });
 
+    const postWithLikeStatus = {
+      ...post,
+      hasLiked: false,
+    };
+
     confirmUploadedFiles(attachments || []);
 
-    // Notify all club members
     for (const member of post.club.members) {
       await createNotification({
         userId: member.userId,
@@ -166,7 +204,7 @@ export async function POST(
       });
     }
 
-    return NextResponse.json(post, { status: 201 });
+    return NextResponse.json(postWithLikeStatus, { status: 201 });
   } catch (error) {
     console.error('Create post error:', error);
     return NextResponse.json(

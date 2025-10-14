@@ -21,11 +21,9 @@ export async function GET(req: Request) {
       },
     });
 
-    if (!user) return NextResponse.json({});
-
-    return NextResponse.json(user);
+    return NextResponse.json(user ?? {});
   } catch (error) {
-    console.error("❌ Error fetching session:", error);
+    console.error("❌ Error fetching session data:", error);
     return NextResponse.json({ error: "Database error" }, { status: 500 });
   }
 }

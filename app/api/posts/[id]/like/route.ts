@@ -30,29 +30,42 @@ export async function POST(
       },
     });
 
+    let newLikeStatus = isLike;
+
     if (existingLike) {
       if (isLike === existingLike.isLike) {
         await prisma.postLike.delete({
           where: { id: existingLike.id },
         });
-        return NextResponse.json({ removed: true });
+        newLikeStatus = false;
       } else {
         const updated = await prisma.postLike.update({
           where: { id: existingLike.id },
           data: { isLike },
         });
-        return NextResponse.json(updated);
+        newLikeStatus = updated.isLike;
       }
     } else {
-      const like = await prisma.postLike.create({
+      await prisma.postLike.create({
         data: {
           postId: postId,
           userId: session.user.id,
           isLike,
-        },
-      });
-      return NextResponse.json(like);
+        }}
+      );
     }
+
+    const likeCount = await prisma.postLike.count({
+      where: {
+        postId: postId,
+        isLike: true,
+      },
+    });
+
+    return NextResponse.json({ 
+      hasLiked: newLikeStatus,
+      likeCount: likeCount
+    });
   } catch (error) {
     console.error('Like error:', error);
     return NextResponse.json(
