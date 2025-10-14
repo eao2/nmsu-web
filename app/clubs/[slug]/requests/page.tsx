@@ -189,7 +189,7 @@ export default function JoinRequestsPage() {
                     <label className="block text-sm font-medium text-muted-foreground dark:text-gray-400 mb-1">
                       {label}:
                     </label>
-                    {typeof value === 'string' && value.startsWith('/uploads/') ? (
+                    {typeof value === 'string' && value.startsWith('posts') ? (
                       <a
                         href={value}
                         target="_blank"
