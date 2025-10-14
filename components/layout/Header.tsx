@@ -5,23 +5,17 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function Header() {
   const router = useRouter()
+  const pathname = usePathname();
   const { data: session, status } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // useEffect(() => {
-  //   if (status === "unauthenticated") {
-  //     router.replace("/signin");
-  //   }
-  // }, [status, router]);
-
+  
   if(!session){
     return null;
   }
-
 
   return (
     <header className="bg-zinc-100 border-b border-zinc-300 sticky top-0 z-50 dark:bg-zinc-900 dark:border-zinc-800">
