@@ -40,7 +40,7 @@ export default function RootLayout({
       <body className={MonoRegular.className}>
         <Providers>
           <Header />
-            <main className="min-h-screen bg-background text-foreground dark:bg-[#0a0a0a]">
+            <main className="min-h-screen bg-background text-foreground dark:bg-zinc-900 dark:text-zinc-100">
               {children}
             </main>
         </Providers>
