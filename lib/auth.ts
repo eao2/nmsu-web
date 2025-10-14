@@ -13,6 +13,45 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
 
+  cookies: {
+    sessionToken: {
+      name: process.env.NODE_ENV === 'production' 
+        ? '__Secure-next-auth.session-token' 
+        : 'next-auth.session-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        domain: process.env.COOKIE_DOMAIN || undefined,
+      },
+    },
+    callbackUrl: {
+      name: process.env.NODE_ENV === 'production'
+        ? '__Secure-next-auth.callback-url'
+        : 'next-auth.callback-url',
+      options: {
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        domain: process.env.COOKIE_DOMAIN || undefined,
+      },
+    },
+    csrfToken: {
+      name: process.env.NODE_ENV === 'production'
+        ? '__Host-next-auth.csrf-token'
+        : 'next-auth.csrf-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        // Note: __Host- prefix requires domain to be omitted
+        // So for CSRF token, don't set custom domain
+      },
+    },
+  },
+
   callbacks: {
     async signIn({ user }) {
       if (!user.email) return false;
@@ -21,12 +60,11 @@ export const authOptions: NextAuthOptions = {
       if (!isAllowed) return "/signin?error=domain";
 
       try {
-        const a = await fetch(`${apiUrl}/api/user/sync`, {
+        await fetch(`${apiUrl}/api/user/sync`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(user),
         });
-
       } catch (err) {
         console.error("Failed to sync user to backend:", err);
       }
