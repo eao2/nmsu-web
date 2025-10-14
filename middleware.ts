@@ -18,7 +18,7 @@ export function middleware(request: NextRequest) {
     if (request.method === 'OPTIONS') {
       const response = new NextResponse(null, { status: 200 });
       response.headers.set('Access-Control-Allow-Origin', origin);
-      response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+      response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
       response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
       response.headers.set('Access-Control-Allow-Credentials', 'true'); // Now you can use credentials
       return response;
@@ -27,7 +27,7 @@ export function middleware(request: NextRequest) {
     // For other requests, add the headers
     const response = NextResponse.next();
     response.headers.set('Access-Control-Allow-Origin', origin);
-    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     response.headers.set('Access-Control-Allow-Credentials', 'true');
     return response;
