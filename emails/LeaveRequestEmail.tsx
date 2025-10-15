@@ -45,7 +45,7 @@ export const LeaveRequestEmail = ({ clubTitle, userName, reason }: LeaveRequestE
           <Text style={reasonText}>{reason}</Text>
         </Section>
         <Section style={buttonContainer}>
-          <Button style={button} href={`${process.env.NEXTAUTH_URL}/clubs`}>
+          <Button style={button} href={`${process.env.BASE_URL}/clubs`}>
             Хүсэлтийг харах
           </Button>
         </Section>

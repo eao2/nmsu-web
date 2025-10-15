@@ -45,7 +45,7 @@ export const WelcomeEmail = ({ userName }: WelcomeEmailProps) => (
           </div>
         </div>
         <Section style={buttonContainer}>
-          <Button style={button} href={process.env.NEXTAUTH_URL}>
+          <Button style={button} href={process.env.BASE_URL}>
             Платформ руу очих
           </Button>
         </Section>

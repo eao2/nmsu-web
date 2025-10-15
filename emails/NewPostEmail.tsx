@@ -42,7 +42,7 @@ export const NewPostEmail = ({ clubTitle, authorName, content }: NewPostEmailPro
           </Section>
         </div>
         <Section style={buttonContainer}>
-          <Button style={button} href={`${process.env.NEXTAUTH_URL}/clubs`}>
+          <Button style={button} href={`${process.env.BASE_URL}/clubs`}>
             Нийтлэлийг үзэх
           </Button>
         </Section>

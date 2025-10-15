@@ -6,7 +6,6 @@ import { s3Client } from "@/lib/s3-client";
 
 export async function GET(request: NextRequest) {
   try {
-    // Get the 'key' from the query parameters, e.g., /api/files?key=uploads-avatars-123.png
     const { searchParams } = new URL(request.url);
     const key = searchParams.get("key");
 
@@ -21,6 +20,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Invalid key" }, { status: 400 });
     }
 
+    console.log('📂 Fetching file:', key);
+
     const command = new GetObjectCommand({
       Bucket: process.env.S3_BUCKET_NAME!,
       Key: key,
@@ -28,18 +29,26 @@ export async function GET(request: NextRequest) {
 
     const response = await s3Client.send(command);
 
-    const bodyStream = response.Body as ReadableStream;
+    if (!response.Body) {
+      return NextResponse.json(
+        { error: "File has no content" },
+        { status: 500 }
+      );
+    }
 
+    const webStream = response.Body.transformToWebStream();
     const contentType = response.ContentType || "application/octet-stream";
 
-    return new NextResponse(bodyStream, {
+    return new NextResponse(webStream, {
       headers: {
         "Content-Type": contentType,
-        "Cache-Control": "public, max-age=2592000",
+        "Cache-Control": "public, max-age=2592000, immutable",
+        "Content-Length": response.ContentLength?.toString() || "",
       },
     });
+
   } catch (error) {
-    console.error("Error serving file:", error);
+    console.error("❌ Error:", error);
 
     if (error instanceof S3ServiceException && error.name === "NoSuchKey") {
       return NextResponse.json({ error: "File not found" }, { status: 404 });

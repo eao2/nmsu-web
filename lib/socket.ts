@@ -10,7 +10,7 @@ export function initializeSocket(httpServer: HTTPServer) {
 
   io = new SocketIOServer(httpServer, {
     cors: {
-      origin: process.env.NEXTAUTH_URL,
+      origin: process.env.BASE_URL,
       methods: ['GET', 'POST'],
     },
   });

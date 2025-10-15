@@ -30,7 +30,7 @@ export const ClubApprovedEmail = ({ clubTitle }: ClubApprovedEmailProps) => (
           Одоо таны клуб бүх оюутнуудад харагдах болно.
         </Text>
         <Section style={buttonContainer}>
-          <Button style={button} href={`${process.env.NEXTAUTH_URL}/clubs`}>
+          <Button style={button} href={`${process.env.BASE_URL}/clubs`}>
             Клуб руу очих
           </Button>
         </Section>

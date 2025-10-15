@@ -30,7 +30,7 @@ export const JoinApprovedEmail = ({ clubTitle }: JoinApprovedEmailProps) => (
           Та одоо клубын бүх үйл ажиллагаанд оролцох боломжтой боллоо.
         </Text>
         <Section style={buttonContainer}>
-          <Button style={button} href={`${process.env.NEXTAUTH_URL}/clubs`}>
+          <Button style={button} href={`${process.env.BASE_URL}/clubs`}>
             Клуб руу очих
           </Button>
         </Section>

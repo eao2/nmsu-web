@@ -17,6 +17,7 @@ export default function ClubsPage() {
 
   useEffect(() => {
     fetchClubs();
+    console.log(session?.user.id)
   }, [session]);
 
   const fetchClubs = async () => {

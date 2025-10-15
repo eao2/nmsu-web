@@ -17,6 +17,7 @@
     "@types/video.js": "^7.3.58",
     "date-fns": "^4.1.0",
     "heic-convert": "^2.1.0",
+    "jose": "^6.1.0",
     "multer": "^2.0.2",
     "next": "15.5.4",
     "next-auth": "^4.24.11",

@@ -1,4 +1,4 @@
-// next.config.ts
+// next.config.ts (Frontend)
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
@@ -21,10 +21,11 @@ const nextConfig = {
     ],
   },
   async rewrites() {
+    console.log('🔄 Rewrites loaded - proxying /api/* to https://nmsu.ne-to.com/api/*');
     return [
       {
-        source: '/api/:path*',
-        destination: 'https://nmsu.ne-to.com/api/:path*', 
+        source: '/api/:path((?!auth).*)',
+        destination: 'https://nmsu.ne-to.com/api/:path*',
       },
     ];
   },

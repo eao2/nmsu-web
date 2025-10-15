@@ -40,7 +40,7 @@ export const JoinRequestEmail = ({ clubTitle, userName }: JoinRequestEmailProps)
           </div>
         </div>
         <Section style={buttonContainer}>
-          <Button style={button} href={`${process.env.NEXTAUTH_URL}/clubs`}>
+          <Button style={button} href={`${process.env.BASE_URL}/clubs`}>
             Хүсэлтийг харах
           </Button>
         </Section>
