@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path((?!auth).*)",
+      "destination": "https://nmsu.ne-to.com/api/:path*"
+    }
+  ]
+}
