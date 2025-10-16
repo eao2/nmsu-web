@@ -7,7 +7,7 @@ import AuthGuard from './AuthGuard';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <SessionProvider basePath="/auth">
+    <SessionProvider>
       <AuthGuard>
         {children}
       </AuthGuard>

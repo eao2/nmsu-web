@@ -94,7 +94,7 @@ export const authOptions: NextAuthOptions = {
       if (account?.provider === 'google' && user.image && user.id) {
         try {
           // Call our API route to handle image processing
-          const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+          const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
           
           await fetch(`${baseUrl}/api/user/profile/image`, {
             method: 'POST',
@@ -139,7 +139,7 @@ export const authOptions: NextAuthOptions = {
     async createUser({ user }) {
       if (user.image && user.id && !(user as any).image.startsWith('avatars-')) {
         try {
-          const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+          const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
 
           await fetch(`${baseUrl}/api/user/profile/image`, {
             method: 'POST',
