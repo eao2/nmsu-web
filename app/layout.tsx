@@ -1,24 +1,40 @@
 // app/layout.tsx
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 import './globals.css';
 import { Providers } from '@/components/Providers';
 import Header from '@/components/layout/Header';
 
-const inter = Inter({ subsets: ['latin', 'cyrillic'] });
+const siteUrl = process.env.BASE_URL || 'http://localhost:3000';
 
 export const metadata: Metadata = {
   title: 'Оюутны Холбоо',
   description: 'Шинэ Монгол Оюутны Холбоо',
   manifest: '/manifest.json',
-};
 
-export const viewport: Viewport = {
-  themeColor: '#333333',
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 1,
+  openGraph: {
+    type: 'website',
+    url: siteUrl,
+    title: 'Оюутны Холбоо',
+    description: 'Шинэ Монгол Оюутны Холбоо',
+    siteName: 'Оюутны Холбоо',
+    images: [
+      {
+        url: `${siteUrl}/og-image.jpg`,
+        width: 1200,
+        height: 630,
+        alt: 'Шинэ Монгол Оюутны Холбоо',
+      },
+    ],
+    locale: 'mn_MN',
+  },
+
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Оюутны Холбоо',
+    description: 'Шинэ Монгол Оюутны Холбоо',
+    images: [`${siteUrl}/og-image.jpg`],
+  },
 };
 
 const MonoRegular = localFont({
@@ -32,11 +48,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="mn">
-      <head>
-        <link rel="icon" href="/ios/72.png" />
-        <link rel="apple-touch-icon" href="/ios/192.png" />
-        <link rel="icon" sizes="144x144" href="/ios/144.png" />
-      </head>
       <body className={MonoRegular.className}>
         <Providers>
           <Header />
